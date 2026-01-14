@@ -1,0 +1,71 @@
+<app-header variant="default"></app-header>
+
+<main>
+
+  <section class="hero-section">
+
+    <div class="hero-content">
+      <div class="hero-title-container">
+        <span class="welcome-text">Bienvenue sur le</span>
+        <h1 class="main-logo-text">
+          Port<span class="highlight">FIL</span>io
+        </h1>
+      </div>
+
+      <div class="hero-gallery-fan">
+        @for (proj of heroImages; track proj.id; let i = $index) {
+          <div class="hero-card-box" [ngClass]="getHeroImageStyle(i)">
+            <img [src]="proj.imageUrl" alt="Project preview" class="hero-img" />
+          </div>
+        }
+      </div>
+
+      <div class="scroll-indicator">
+        <button class="arrow-btn" (click)="scrollToAnchor('projects-anchor')" aria-label="Descendre">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="wave-divider">
+      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+      </svg>
+    </div>
+
+  </section>
+
+  <div class="sticky-search-wrapper" id="projects-anchor">
+    <div class="search-container">
+      <app-search-bar (search)="onSearch($event)"></app-search-bar>
+    </div>
+  </div>
+
+  <section class="projects-list-section">
+    <div class="project-grid">
+      @for (proj of paginatedProjects; track proj.id) {
+        <app-project-card
+          [project]="proj"
+          variant="normal"
+          (toggleFavorite)="onToggleFavorite($event)">
+        </app-project-card>
+      } @empty {
+        <div class="no-results">
+          <p>Aucun projet ne correspond à votre recherche.</p>
+        </div>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="page-btn prev" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">&lt;</button>
+        @for (page of pageNumbers; track page) {
+          <button class="page-btn number" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+        }
+        <button class="page-btn next" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">&gt;</button>
+      </div>
+    }
+  </section>
+
+</main>
+<app-footer></app-footer>
