@@ -1,0 +1,34 @@
+<header class="app-header">
+
+  <div class="header-left">
+    <a [routerLink]="variant === 'auth' ? '/' : '/home'" class="logo-link">
+      <img src="assets/images/logo_application.png" alt="Logo FIL" class="logo-img" />
+    </a>
+  </div>
+
+  @if (variant === 'detail') {
+    <div class="header-center">
+      <button class="back-btn" (click)="goBack()" aria-label="Retour">
+        <i class="icon-chevron-left"></i> <span class="chevron-placeholder"><</span> </button>
+      <h1 class="project-title">{{ projectTitle }}</h1>
+    </div>
+  }
+
+  @if (variant !== 'auth') {
+    <nav class="header-right">
+
+      <a routerLink="/create-project" class="icon-btn create-btn" aria-label="Créer un projet">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+      </a>
+
+      <a routerLink="/favorites" class="icon-btn favorite-btn" aria-label="Mes favoris">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      </a>
+
+      <a routerLink="/profile" class="icon-btn profile-btn" aria-label="Mon profil">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </a>
+
+    </nav>
+  }
+</header>
