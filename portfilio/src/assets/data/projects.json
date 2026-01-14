@@ -1,0 +1,182 @@
+[
+  {
+    "id": 101,
+    "name": "Développement d'un Portfolio Dynamique",
+    "description": "Création d'une application web de type portfolio en utilisant le framework Angular pour mettre en avant les compétences et les projets réalisés.",
+    "technologies": ["Angular", "TypeScript", "SCSS", "RxJS"],
+    "modules": ["Développement Web", "Gestion de projet", "Communication"],
+    "year": "A2",
+    "collaborators": [2, 3]
+  },
+  {
+    "id": 102,
+    "name": "API REST pour E-commerce",
+    "description": "Conception et implémentation d'une API RESTful pour une plateforme de vente en ligne, gérant les produits, les utilisateurs et les commandes.",
+    "technologies": ["Node.js", "Express", "MongoDB"],
+    "modules": ["Développement Backend", "Bases de données"],
+    "year": "A3",
+    "collaborators": [4]
+  },
+  {
+    "id": 103,
+    "name": "Projet de Communication Visuelle",
+    "description": "Création d'une charte graphique et de supports de communication pour une startup technologique.",
+    "technologies": ["Figma", "Adobe Illustrator"],
+    "modules": ["Design UI/UX", "Anglais", "Communication"],
+    "year": "A1",
+    "collaborators": [2]
+  },
+  {
+    "id": 104,
+    "name": "Application Mobile de Gestion de Tâches",
+    "description": "Développement d'une application multiplateforme pour le suivi des tâches quotidiennes avec notifications push.",
+    "technologies": ["Flutter", "Dart", "Firebase"],
+    "modules": ["Développement Mobile", "Bases de données", "Gestion de projet"],
+    "year": "A2",
+    "collaborators": [3, 4]
+  },
+  {
+    "id": 105,
+    "name": "Tableau de Bord de Visualisation de Données",
+    "description": "Création d'un dashboard interactif pour analyser des données de ventes en temps réel.",
+    "technologies": ["React", "D3.js", "JavaScript"],
+    "modules": ["Développement Web", "Analyse de données"],
+    "year": "A3",
+    "collaborators": [2]
+  },
+  {
+    "id": 106,
+    "name": "Système de Domotique IoT",
+    "description": "Mise en place d'un système pour contrôler des objets connectés (lumières, température) via une interface web.",
+    "technologies": ["Raspberry Pi", "Python", "MQTT", "Vue.js"],
+    "modules": ["Systèmes embarqués", "Développement Web"],
+    "year": "A3",
+    "collaborators": [2, 4]
+  },
+  {
+    "id": 107,
+    "name": "Plateforme d'E-learning",
+    "description": "Développement d'un site web permettant de suivre des cours en ligne, avec gestion des inscriptions et suivi de progression.",
+    "technologies": ["PHP", "Laravel", "MySQL", "JavaScript"],
+    "modules": ["Développement Web", "Bases de données", "Anglais"],
+    "year": "A2",
+    "collaborators": [3]
+  },
+  {
+    "id": 108,
+    "name": "Application de Chat en Temps Réel",
+    "description": "Création d'une messagerie instantanée utilisant les WebSockets pour une communication fluide.",
+    "technologies": ["Node.js", "Socket.IO", "React"],
+    "modules": ["Développement Backend", "Développement Web"],
+    "year": "A2",
+    "collaborators": [2, 3, 4]
+  },
+  {
+    "id": 109,
+    "name": "Jeu 2D 'Platformer'",
+    "description": "Développement d'un jeu de plateforme simple avec un moteur de jeu JavaScript.",
+    "technologies": ["JavaScript", "Phaser.js", "HTML5 Canvas"],
+    "modules": ["Développement de jeux", "Algorithmique"],
+    "year": "A1",
+    "collaborators": [4]
+  },
+  {
+    "id": 110,
+    "name": "Mise en Place d'un Pipeline CI/CD",
+    "description": "Automatisation des processus de build, test et déploiement pour une application web.",
+    "technologies": ["Docker", "Jenkins", "Git"],
+    "modules": ["DevOps", "Gestion de projet"],
+    "year": "A3",
+    "collaborators": [2, 4]
+  },
+  {
+    "id": 111,
+    "name": "Moteur de Blog Statique",
+    "description": "Création d'un générateur de site statique pour un blog personnel, optimisé pour la performance.",
+    "technologies": ["Go", "Markdown", "HTML/CSS"],
+    "modules": ["Développement Backend", "SEO"],
+    "year": "A2",
+    "collaborators": [3]
+  },
+  {
+    "id": 112,
+    "name": "Outil d'Analyse de Sentiments sur Twitter",
+    "description": "Développement d'un script Python qui analyse les sentiments (positif, négatif, neutre) des tweets sur un sujet donné.",
+    "technologies": ["Python", "NLTK", "API Twitter"],
+    "modules": ["Intelligence Artificielle", "Anglais"],
+    "year": "A3",
+    "collaborators": [4]
+  },
+  {
+    "id": 113,
+    "name": "Site de Partage de Recettes",
+    "description": "Plateforme web où les utilisateurs peuvent poster, noter et commenter des recettes de cuisine.",
+    "technologies": ["Django", "Python", "PostgreSQL", "Bootstrap"],
+    "modules": ["Développement Web", "Bases de données", "Design UI/UX"],
+    "year": "A2",
+    "collaborators": [2, 3]
+  },
+  {
+    "id": 114,
+    "name": "Application de Suivi Sportif",
+    "description": "Application mobile pour enregistrer les sessions de course à pied, avec suivi GPS et statistiques.",
+    "technologies": ["React Native", "Expo", "JavaScript"],
+    "modules": ["Développement Mobile", "Communication"],
+    "year": "A2",
+    "collaborators": [3, 4]
+  },
+  {
+    "id": 115,
+    "name": "Système de Réservation en Ligne",
+    "description": "Développement d'un module de réservation pour un restaurant, intégrable à un site existant.",
+    "technologies": ["Java", "Spring Boot", "Thymeleaf"],
+    "modules": ["Développement Backend", "Développement Web"],
+    "year": "A3",
+    "collaborators": [2]
+  },
+  {
+    "id": 116,
+    "name": "Gestionnaire de Finances Personnelles",
+    "description": "Application web pour suivre ses dépenses et revenus, avec graphiques et catégorisation.",
+    "technologies": ["Vue.js", "Chart.js", "Firebase"],
+    "modules": ["Développement Web", "Analyse de données"],
+    "year": "A1",
+    "collaborators": [4]
+  },
+  {
+    "id": 117,
+    "name": "Audit de Sécurité d'une Application Web",
+    "description": "Analyse d'une application existante pour identifier et corriger les failles de sécurité courantes (XSS, Injection SQL).",
+    "technologies": ["OWASP ZAP", "Burp Suite"],
+    "modules": ["Sécurité Informatique", "Réseaux"],
+    "year": "A3",
+    "collaborators": [2, 4]
+  },
+  {
+    "id": 118,
+    "name": "Maquette Interactive pour une App de Voyage",
+    "description": "Prototypage d'une application mobile de planification de voyages, de la recherche d'idées au booking.",
+    "technologies": ["Figma", "Adobe XD"],
+    "modules": ["Design UI/UX", "Gestion de projet"],
+    "year": "A1",
+    "collaborators": [3]
+  },
+  {
+    "id": 119,
+    "name": "Extension Navigateur 'Productivity Timer'",
+    "description": "Création d'une extension pour Chrome/Firefox basée sur la technique Pomodoro pour gérer le temps de travail.",
+    "technologies": ["JavaScript", "HTML", "CSS", "WebExtensions API"],
+    "modules": ["Développement Web", "Algorithmique"],
+    "year": "A2",
+    "collaborators": [2, 3, 4]
+  },
+  {
+    "id": 120,
+    "name": "API GraphQL pour une librairie",
+    "description": "Conception d'une API avec GraphQL pour gérer des livres, auteurs et critiques, offrant plus de flexibilité que REST.",
+    "technologies": ["Node.js", "Apollo Server", "GraphQL"],
+    "modules": ["Développement Backend", "Bases de données"],
+    "year": "A3",
+    "collaborators": [4]
+  }
+]

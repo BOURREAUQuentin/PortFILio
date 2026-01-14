@@ -1,0 +1,44 @@
+@if (project$ | async; as project) {
+  <div class="project-detail-container">
+    <!-- En-tête avec bouton retour et titre -->
+    <header class="detail-header">
+      <button (click)="location.back()" class="back-button">
+        &larr; Retour aux projets
+      </button>
+      <h1 class="project-title">{{ project.name }}</h1>
+    </header>
+
+    <!-- Contenu du projet -->
+    <main class="project-content">
+      <p class="project-description">{{ project.description }}</p>
+
+      <div class="details-section">
+        <h2>Détails</h2>
+        <ul>
+          <li><strong>Promotion de réalisation :</strong> {{ project.promotion }}</li>
+          <li><strong>Collaborateurs (IDs) :</strong> {{ project.collaborators.join(', ') }}</li>
+        </ul>
+      </div>
+
+      <div class="details-section">
+        <h2>Technologies utilisées</h2>
+        <div class="tags">
+          @for (tech of project.technologies; track tech) {
+            <span class="tag tech-tag">{{ tech }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h2>Modules sollicités</h2>
+        <div class="tags">
+          @for (module of project.modules; track module) {
+            <span class="tag module-tag">{{ module }}</span>
+          }
+        </div>
+      </div>
+    </main>
+  </div>
+} @else {
+  <p>Projet non trouvé...</p>
+}

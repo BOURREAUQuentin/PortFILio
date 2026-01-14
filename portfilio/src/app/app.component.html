@@ -1,0 +1,15 @@
+<header class="main-header">
+  <a routerLink="/" class="logo">Mon Portfolio</a>
+  <nav>
+    @if (currentUser$ | async; as user) {
+      <span class="user-greeting">Bonjour, {{ user.firstName || user.email }}</span>
+      <button (click)="logout()" class="logout-button">Déconnexion</button>
+    } @else {
+      <a routerLink="/auth/login" class="login-button">Connexion</a>
+    }
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

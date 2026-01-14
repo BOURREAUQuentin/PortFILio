@@ -1,0 +1,40 @@
+<div class="project-list-container">
+  <h1>Mes Projets</h1>
+
+  <!-- Grille des projets -->
+  <div class="projects-grid">
+    @for (project of paginatedProjects; track project.id) {
+      <!-- Chaque carte est maintenant un lien -->
+      <a [routerLink]="['/projects', project.id]" class="project-card">
+        <h3>{{ project.name }}</h3>
+        <!-- CORRECTION : Remplacer 'promotion' par 'year' -->
+        <p class="project-year">{{ project.promotion }}</p>
+        <p class="project-description">{{ project.description }}</p>
+        <div class="project-tags">
+          @for (tech of project.technologies; track tech) {
+            <span class="tag tech-tag">{{ tech }}</span>
+          }
+        </div>
+      </a>
+    }
+  </div>
+
+  <!-- Pagination -->
+  @if (totalPages > 1) {
+    <div class="pagination-controls">
+      <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+        &laquo; Précédent
+      </button>
+
+      @for (page of pages; track page) {
+        <button (click)="goToPage(page)" [class.active]="currentPage === page">
+          {{ page }}
+        </button>
+      }
+
+      <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">
+        Suivant &raquo;
+      </button>
+    </div>
+  }
+</div>

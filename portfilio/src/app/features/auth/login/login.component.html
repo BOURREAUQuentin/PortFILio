@@ -1,0 +1,30 @@
+<div class="login-container">
+  <form class="login-form" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <h2>Connexion</h2>
+
+    @if (errorMessage) {
+      <div class="error-message">{{ errorMessage }}</div>
+    }
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" [(ngModel)]="credentials.email" required email #email="ngModel">
+      @if (email.invalid && (email.dirty || email.touched)) {
+        <div class="error-message">Une adresse email valide est requise.</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required #password="ngModel">
+      @if (password.invalid && (password.dirty || password.touched)) {
+        <div class="error-message">Le mot de passe est requis.</div>
+      }
+    </div>
+
+    <button type="submit" class="submit-button" [disabled]="loginForm.invalid">Se connecter</button>
+    <p class="redirect-link">
+      Pas encore de compte ? <a routerLink="/auth/register">S'inscrire</a>
+    </p>
+  </form>
+</div>
