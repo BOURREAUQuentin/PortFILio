@@ -15,8 +15,6 @@ export class SearchBarComponent {
 
   searchTerm: string = '';
   isSortMenuOpen: boolean = false;
-
-  // Par défaut sur 'recent'
   activeSort: SortOption = 'recent';
 
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
@@ -27,6 +25,12 @@ export class SearchBarComponent {
 
   onSearchChange(): void {
     this.search.emit(this.searchTerm);
+  }
+
+  // NOUVELLE MÉTHODE
+  resetSearch(): void {
+    this.searchTerm = '';
+    this.onSearchChange(); // Émet une chaîne vide pour réinitialiser la liste
   }
 
   toggleSortMenu(): void {

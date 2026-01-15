@@ -12,6 +12,13 @@
       [(ngModel)]="searchTerm"
       (input)="onSearchChange()"
     />
+
+    @if (searchTerm) {
+      <button class="reset-btn" (click)="resetSearch()" aria-label="Effacer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    }
+
     <button class="search-submit-btn" aria-label="Rechercher">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
@@ -21,15 +28,12 @@
   </div>
 
   <div class="search-actions">
-
     <div class="sort-container">
-
       <button
         class="action-btn sort-btn"
         [class.active]="isSortMenuOpen || activeSort !== 'recent'"
         (click)="toggleSortMenu()"
         aria-label="Trier">
-
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
           <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
@@ -37,7 +41,6 @@
           <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
           <line x1="17" y1="16" x2="23" y2="16"></line>
         </svg>
-
         @if (activeSort !== 'recent') {
           <span class="sort-badge">1</span>
         }
@@ -45,21 +48,12 @@
 
       @if (isSortMenuOpen) {
         <div class="sort-dropdown">
-          <button (click)="selectSort('recent')" [class.selected]="activeSort === 'recent'">
-            Plus récents
-          </button>
-          <button (click)="selectSort('oldest')" [class.selected]="activeSort === 'oldest'">
-            Plus anciens
-          </button>
-          <button (click)="selectSort('alpha')" [class.selected]="activeSort === 'alpha'">
-            Alphabétique (A-Z)
-          </button>
-          <button (click)="selectSort('alpha-reverse')" [class.selected]="activeSort === 'alpha-reverse'">
-            Alphabétique (Z-A)
-          </button>
+          <button (click)="selectSort('recent')" [class.selected]="activeSort === 'recent'">Plus récents</button>
+          <button (click)="selectSort('oldest')" [class.selected]="activeSort === 'oldest'">Plus anciens</button>
+          <button (click)="selectSort('alpha')" [class.selected]="activeSort === 'alpha'">Alphabétique (A-Z)</button>
+          <button (click)="selectSort('alpha-reverse')" [class.selected]="activeSort === 'alpha-reverse'">Alphabétique (Z-A)</button>
         </div>
       }
-
     </div>
 
     <button class="action-btn filter-btn" (click)="onFilterClick()" aria-label="Filtrer">
@@ -67,6 +61,5 @@
         <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
       </svg>
     </button>
-
   </div>
 </div>

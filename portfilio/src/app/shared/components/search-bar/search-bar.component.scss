@@ -13,22 +13,52 @@
   max-width: 800px;
   margin: 0 auto;
 
-  // INPUT
+  // INPUT CONTAINER
   .search-input-container {
-    flex: 1; // Prend toute la place dispo
+    flex: 1;
     position: relative;
     display: flex;
     align-items: center;
-    min-width: 0; // Sécurité flexbox
+    min-width: 0;
 
     .search-input {
-      width: 100%; height: 50px; padding: 0 60px 0 25px;
+      width: 100%;
+      height: 50px;
+
+      // MODIFICATION : Plus d'espace à droite (90px) pour loger le Reset + la Loupe
+      padding: 0 90px 0 25px;
+
       border-radius: 50px; border: none; background-color: white;
       font-family: 'Inter', sans-serif; font-size: 1rem; color: $color-dark; outline: none;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); transition: box-shadow 0.2s;
-      &::placeholder { color: lighten($color-dark, 40%); }
+      &::placeholder { color: lighten($color-dark, 20%); }
       &:focus { box-shadow: 0 4px 20px rgba($color-orange, 0.15); }
     }
+
+    // NOUVEAU : Style du bouton Reset (la croix)
+    .reset-btn {
+      position: absolute;
+      right: 50px; // Placé juste à gauche du bouton Loupe
+      top: 50%;
+      transform: translateY(-50%);
+
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      border-radius: 50%;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: #f0f0f0;
+        color: $color-dark;
+      }
+    }
+
     .search-submit-btn {
       position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
       width: 40px; height: 40px; border-radius: 50%; background-color: $color-dark;
@@ -37,76 +67,37 @@
     }
   }
 
-  // ACTIONS (CORRECTION DU BUG)
+  // ACTIONS (Inchangé)
   .search-actions {
-    display: flex;
-    gap: 1rem;
-    position: relative;
-
-    // IMPORTANT : Empêche les boutons d'être écrasés
-    flex-shrink: 0;
-
-    .sort-container {
-      position: relative;
-    }
+    display: flex; gap: 1rem; position: relative; flex-shrink: 0;
+    .sort-container { position: relative; }
 
     .action-btn {
-      background: none; border: none; cursor: pointer; color: $color-dark;
-      padding: 0; // Reset padding
-      width: 44px; // Taille fixe
-      height: 44px; // Taille fixe
-      border-radius: 8px; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; // Pour la pastille
-
-      // IMPORTANT : Empêche le bouton lui-même de rétrécir
-      flex-shrink: 0;
+      background: none; border: none; cursor: pointer; color: $color-dark; padding: 0;
+      width: 44px; height: 44px; border-radius: 8px; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;
 
       svg { width: 28px; height: 28px; }
 
-      &:hover, &.active {
-        background-color: rgba($color-dark, 0.05);
-        color: $color-orange;
-      }
+      &:hover, &.active { background-color: rgba($color-dark, 0.05); color: $color-orange; }
 
-      // LA PASTILLE (Badge)
       .sort-badge {
-        position: absolute;
-        top: -2px;
-        right: -2px;
-        background-color: $color-orange;
-        color: white;
-        font-size: 0.7rem;
-        font-weight: 800;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid $color-bg-hero; // Petite bordure couleur fond pour détacher
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        position: absolute; top: -2px; right: -2px; background-color: $color-orange; color: white;
+        font-size: 0.7rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        border: 2px solid $color-bg-hero; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       }
     }
 
-    // MENU POPUP
     .sort-dropdown {
-      position: absolute;
-      top: 120%;
-      right: 0;
-      width: 200px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      padding: 0.5rem;
-      z-index: 100;
-      display: flex; flex-direction: column; gap: 2px;
+      position: absolute; top: 120%; right: 0; width: 200px;
+      background-color: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 0.5rem; z-index: 100; display: flex; flex-direction: column; gap: 2px;
 
       button {
-        background: none; border: none; text-align: left;
-        padding: 10px 15px; font-family: 'Inter', sans-serif; font-size: 0.95rem;
-        color: $color-dark; border-radius: 8px; cursor: pointer; transition: background 0.2s;
-
+        background: none; border: none; text-align: left; padding: 10px 15px;
+        font-family: 'Inter', sans-serif; font-size: 0.95rem; color: $color-dark;
+        border-radius: 8px; cursor: pointer; transition: background 0.2s;
         &:hover { background-color: rgba($color-orange, 0.08); color: $color-orange; }
         &.selected { font-weight: bold; color: $color-orange; background-color: rgba($color-orange, 0.1); }
       }

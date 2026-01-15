@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule, Location } from '@angular/common'; // Location pour le bouton retour
-import { RouterLink } from '@angular/router';
+import { Component, Input, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
+import { User } from '../../../core/models/user.model';
 
 export type HeaderVariant = 'default' | 'auth' | 'detail';
 
@@ -12,16 +14,52 @@ export type HeaderVariant = 'default' | 'auth' | 'detail';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  // Par défaut, on affiche la version classique
   @Input() variant: HeaderVariant = 'default';
-
-  // Titre optionnel (uniquement pour la variante 'detail')
   @Input() projectTitle: string = '';
 
-  constructor(private location: Location) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private location = inject(Location);
 
-  // Fonction pour revenir en arrière (utilisée par la flèche du titre)
+  currentUser: User | null = null;
+  isProfileMenuOpen: boolean = false; // État du menu profil
+
+  constructor() {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
   goBack(): void {
     this.location.back();
+  }
+
+  // Gère le clic sur les boutons d'action génériques
+  handleAction(route: string): void {
+    if (this.currentUser) {
+      this.router.navigate([route]);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  // Gère spécifiquement le clic sur l'icône Profil
+  handleProfileClick(): void {
+    if (this.currentUser) {
+      // Si connecté : on ouvre/ferme le menu
+      this.isProfileMenuOpen = !this.isProfileMenuOpen;
+    } else {
+      // Si pas connecté : redirection login
+      this.router.navigate(['/login']);
+    }
+  }
+
+  closeMenu(): void {
+    this.isProfileMenuOpen = false;
+  }
+
+  onLogout(): void {
+    this.authService.logout();
+    this.closeMenu();
   }
 }

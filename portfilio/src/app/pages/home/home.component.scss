@@ -1,7 +1,7 @@
-// IMPORT DU FICHIER GLOBAL (Ajuste le chemin si besoin)
+// IMPORT DU FICHIER GLOBAL
 @import '../../../styles/variables';
 
-// --- CONFIGURATION LOCALE (Spécifique à la Home) ---
+// --- CONFIGURATION LOCALE ---
 $stripe-color: rgba(0, 0, 0, 0.03);
 $stripe-size: 100px;
 $stripe-width: 2px;
@@ -12,7 +12,6 @@ $size-small: 160px;
 
 :host {
   display: block;
-  // Utilisation de la variable globale
   background-color: $color-bg-bottom;
   min-height: 100vh;
 }
@@ -24,7 +23,12 @@ $size-small: 160px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem 10rem;
+
+  // MODIFICATION ICI :
+  // On ajoute la hauteur du header ($header-height = 80px) au padding du haut
+  // Avant : 3rem 1rem 10rem
+  padding: calc(3rem + #{$header-height}) 1rem 10rem;
+
   overflow: hidden;
 
   // Utilisation variable globale
@@ -71,7 +75,7 @@ $size-small: 160px;
     }
   }
 
-  // --- GALERIE ÉVENTAIL ---
+  // --- GALERIE ÉVENTAIL (Rien ne change ici) ---
   .hero-gallery-fan {
     display: flex;
     justify-content: center;
@@ -140,10 +144,10 @@ $size-small: 160px;
 // --- STICKY SEARCH ---
 .sticky-search-wrapper {
   position: sticky;
+  // IMPORTANT : La search bar se colle SOUS le header (qui fait 80px)
   top: $header-height;
   z-index: 900;
 
-  // Transparence 0.4 demandée
   background-color: rgba($color-bg-bottom, 0.4);
 
   backdrop-filter: blur(8px);
@@ -154,7 +158,7 @@ $size-small: 160px;
 
 // --- PROJECT LIST ---
 .projects-list-section {
-  max-width: $container-width; // Utilisation variable
+  max-width: $container-width;
   margin: 0 auto;
   padding: 0 2rem 4rem;
 

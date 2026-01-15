@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "email": "jules@fil.com",
+    "password": "123",
+    "firstName": "Jules",
+    "lastName": "Autret",
+    "promo": "A1"
+  },
+  {
+    "id": 2,
+    "email": "quentin@fil.com",
+    "password": "123",
+    "firstName": "Quentin",
+    "lastName": "Bourreau",
+    "promo": "A1"
+  }
+]

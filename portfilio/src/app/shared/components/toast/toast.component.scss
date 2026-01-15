@@ -1,0 +1,95 @@
+// Variables couleurs
+$toast-success: #27ae60;
+$toast-error: #e74c3c;
+$toast-info: #2D0C13;
+$toast-bg-light-opacity: 0.08;
+
+// Conteneur principal
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 300px;
+  max-width: 90%;
+  padding: 16px 20px;
+
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+
+  cursor: pointer;
+  animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  // --- Styles selon type ---
+  &.success {
+    border-left: 6px solid $toast-success;
+
+    .toast-icon {
+      color: $toast-success;
+      background: rgba($toast-success, 0.1);
+    }
+  }
+
+  &.error {
+    border-left: 6px solid $toast-error;
+
+    .toast-icon {
+      color: $toast-error;
+      background: rgba($toast-error, 0.1);
+    }
+  }
+
+  &.info {
+    border-left: 6px solid $toast-info;
+
+    .toast-icon {
+      color: $toast-info;
+      background: rgba($toast-info, $toast-bg-light-opacity);
+    }
+  }
+
+  // --- Icone ---
+  .toast-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  // --- Message ---
+  .message {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #2D0C13;
+  }
+}
+
+// Animation slide-in
+@keyframes slideIn {
+  from {
+    top: -80px;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+  to {
+    top: 24px;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
