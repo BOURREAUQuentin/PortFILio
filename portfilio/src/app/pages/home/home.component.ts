@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core'; // Ajout ChangeDetectorRef
-import { CommonModule, ViewportScroller } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
 import { ProjectCardComponent } from '../../shared/components/project-card/project-card.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ProjectService } from '../../core/services/project.service';
 import { Project } from '../../core/models/project.model';
+import { SortOption } from '../../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-home',
@@ -29,20 +30,19 @@ export class HomeComponent implements OnInit {
   totalPages: number = 1;
 
   ngOnInit(): void {
-    // On s'abonne au service (qui est maintenant intelligent)
     this.projectService.getProjects().subscribe({
       next: (data) => {
-        // On vérifie qu'on a bien des données
         if (data && data.length > 0) {
+          // 1. On charge les données brutes
           this.allProjects = data;
-          this.filteredProjects = data;
           this.heroImages = data.slice(0, 5);
 
-          // Initialisation de la pagination
-          this.updatePagination();
+          // 2. IMPORTANT : On applique le tri par défaut ("recent") immédiatement
+          // Cela trie this.allProjects et initialise this.filteredProjects
+          this.applySort('recent', data);
 
-          // FORCER LA DETECTION DE CHANGEMENT
-          // C'est souvent ça qui manque quand les données ne s'affichent pas au retour
+          // 3. On lance la pagination et la détection
+          this.updatePagination();
           this.cdr.detectChanges();
         }
       },
@@ -86,6 +86,34 @@ export class HomeComponent implements OnInit {
         p.tags.some(t => t.toLowerCase().includes(lowerTerm))
       );
     }
+    this.updatePagination();
+  }
+
+  applySort(sortType: string, projects: Project[]): void {
+    // On travaille sur une copie pour ne pas casser l'ordre original si besoin
+    let sorted = [...projects];
+
+    switch (sortType) {
+      case 'recent':
+        sorted.sort((a, b) => b.id - a.id);
+        break;
+      case 'oldest':
+        sorted.sort((a, b) => a.id - b.id);
+        break;
+      case 'alpha':
+        sorted.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'alpha-reverse':
+        sorted.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+    }
+    this.filteredProjects = sorted;
+  }
+
+  // Méthode appelée par l'event de la search-bar
+  onSort(sortType: SortOption): void {
+    // On trie la liste actuelle (filteredProjects)
+    this.applySort(sortType, this.filteredProjects);
     this.updatePagination();
   }
 

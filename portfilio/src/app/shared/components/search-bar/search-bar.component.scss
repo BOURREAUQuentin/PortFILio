@@ -1,128 +1,115 @@
-// Variables (à mettre dans tes variables globales normalement)
-$color-input-bg: #FFF0E9; // Couleur crème très claire du champ (selon image)
-$color-dark-text: #2D0C13; // Marron très foncé (presque noir)
-$color-placeholder: #8A7A7A; // Gris/Marron clair pour le texte
-$color-white: #FFFFFF;
-$border-radius-pill: 50px;
+@import '../../../../styles/variables';
+
+.click-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99; cursor: default;
+}
 
 .search-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center; // Centré horizontalement
-  gap: 1.5rem; // Espace entre la barre et les boutons
+  justify-content: center;
+  gap: 1.5rem;
   width: 100%;
-  max-width: 800px; // Largeur max pour ne pas qu'il soit trop étiré sur grand écran
-  margin: 0 auto; // Centrage
-  padding: 1rem 0;
+  max-width: 800px;
+  margin: 0 auto;
 
-  // --- PARTIE GAUCHE : INPUT ---
+  // INPUT
   .search-input-container {
-    flex: 1; // Prend toute la place disponible
+    flex: 1; // Prend toute la place dispo
     position: relative;
     display: flex;
     align-items: center;
+    min-width: 0; // Sécurité flexbox
 
     .search-input {
-      width: 100%;
-      height: 50px;
-      padding: 0 60px 0 25px; // Padding droit grand pour laisser place au bouton loupe
-      border-radius: $border-radius-pill;
-      border: none;
-      background-color: $color-input-bg;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      color: $color-dark-text;
-      outline: none;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); // Légère ombre portée comme sur l'image
-      transition: box-shadow 0.2s;
-
-      &::placeholder {
-        color: $color-placeholder;
-        opacity: 0.8;
-      }
-
-      &:focus {
-        box-shadow: 0 4px 20px rgba(232, 80, 29, 0.15); // Légère lueur orange au focus ?
-      }
+      width: 100%; height: 50px; padding: 0 60px 0 25px;
+      border-radius: 50px; border: none; background-color: white;
+      font-family: 'Inter', sans-serif; font-size: 1rem; color: $color-dark; outline: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); transition: box-shadow 0.2s;
+      &::placeholder { color: lighten($color-dark, 40%); }
+      &:focus { box-shadow: 0 4px 20px rgba($color-orange, 0.15); }
     }
-
     .search-submit-btn {
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: $color-dark-text; // Fond foncé
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: $color-white;
-      transition: transform 0.2s;
-
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-
-      &:hover {
-        transform: translateY(-50%) scale(1.05);
-      }
+      position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%; background-color: $color-dark;
+      border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white;
+      svg { width: 20px; height: 20px; }
     }
   }
 
-  // --- PARTIE DROITE : ACTIONS ---
+  // ACTIONS (CORRECTION DU BUG)
   .search-actions {
     display: flex;
-    gap: 1rem; // Espace entre Tri et Filtre
+    gap: 1rem;
+    position: relative;
+
+    // IMPORTANT : Empêche les boutons d'être écrasés
+    flex-shrink: 0;
+
+    .sort-container {
+      position: relative;
+    }
 
     .action-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: $color-dark-text;
-      padding: 8px;
-      border-radius: 8px; // Petit arrondi au survol
-      transition: background-color 0.2s, color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: none; border: none; cursor: pointer; color: $color-dark;
+      padding: 0; // Reset padding
+      width: 44px; // Taille fixe
+      height: 44px; // Taille fixe
+      border-radius: 8px; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; // Pour la pastille
 
-      svg {
-        width: 28px; // Icônes un peu grosses comme sur l'image
-        height: 28px;
+      // IMPORTANT : Empêche le bouton lui-même de rétrécir
+      flex-shrink: 0;
+
+      svg { width: 28px; height: 28px; }
+
+      &:hover, &.active {
+        background-color: rgba($color-dark, 0.05);
+        color: $color-orange;
       }
 
-      &:hover {
-        background-color: rgba($color-dark-text, 0.05);
-        // Si tu veux qu'ils deviennent orange au survol :
-        // color: #E8501D;
+      // LA PASTILLE (Badge)
+      .sort-badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background-color: $color-orange;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 800;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid $color-bg-hero; // Petite bordure couleur fond pour détacher
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       }
     }
 
-    // Ajustement spécifique pour l'entonnoir (filtre) qui semble plein sur l'image
-    .filter-btn svg {
-      fill: $color-dark-text;
-    }
-  }
-}
+    // MENU POPUP
+    .sort-dropdown {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      width: 200px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 0.5rem;
+      z-index: 100;
+      display: flex; flex-direction: column; gap: 2px;
 
-// Responsive Mobile
-@media (max-width: 600px) {
-  .search-wrapper {
-    gap: 0.5rem;
+      button {
+        background: none; border: none; text-align: left;
+        padding: 10px 15px; font-family: 'Inter', sans-serif; font-size: 0.95rem;
+        color: $color-dark; border-radius: 8px; cursor: pointer; transition: background 0.2s;
 
-    .search-input-container .search-input {
-      height: 44px;
-      font-size: 0.9rem;
-    }
-
-    .search-actions .action-btn svg {
-      width: 24px;
-      height: 24px;
+        &:hover { background-color: rgba($color-orange, 0.08); color: $color-orange; }
+        &.selected { font-weight: bold; color: $color-orange; background-color: rgba($color-orange, 0.1); }
+      }
     }
   }
 }
