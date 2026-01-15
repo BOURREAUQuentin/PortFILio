@@ -1,0 +1,57 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  background-color: $color-bg-bottom;
+  min-height: 100vh;
+}
+
+.page-content {
+  padding: 2rem 0;
+}
+
+.container {
+  @include page-container;
+  max-width: 800px; // largeur confortable pour la lecture
+
+  h1 {
+    color: $color-dark;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .legal-block {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+
+    h2 {
+      color: $color-orange;
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      color: $color-dark;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 1rem;
+
+    .legal-block {
+      padding: 1.25rem;
+    }
+  }
+}

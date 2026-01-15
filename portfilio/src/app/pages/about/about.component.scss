@@ -1,0 +1,68 @@
+@import '../../../styles/variables'; // Import des variables globales
+
+:host {
+  display: block;
+  background-color: $color-bg-bottom; // Fond beige rosé
+  min-height: 100vh;
+}
+
+.page-content {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+
+  .container {
+    @include page-container; // Utilise le mixin défini plus haut
+
+    h1 {
+      font-size: 2.5rem;
+      color: $color-dark;
+      margin-bottom: 2rem;
+      text-align: center;
+      .highlight { color: $color-orange; }
+    }
+
+    .intro {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: $color-dark;
+      margin-bottom: 4rem;
+      text-align: center;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .team {
+      h2 { text-align: center; color: $color-dark; margin-bottom: 2rem; }
+
+      .team-grid {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+
+        .member-card {
+          background: rgba(255, 255, 255, 0.5);
+          padding: 2rem;
+          border-radius: 20px;
+          text-align: center;
+          width: 250px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+
+          .avatar {
+            width: 80px; height: 80px;
+            background-color: $color-orange;
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: bold;
+            margin: 0 auto 1rem;
+          }
+
+          h3 { margin: 0.5rem 0; font-size: 1.2rem; color: $color-dark; }
+          p { color: $color-text-light; font-size: 0.9rem; margin: 0; }
+        }
+      }
+    }
+  }
+}

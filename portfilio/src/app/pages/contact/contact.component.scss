@@ -1,0 +1,77 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  background-color: $color-bg-bottom;
+  min-height: 100vh;
+}
+
+.page-content {
+  padding: 2rem 0;
+}
+
+.container {
+  @include page-container;
+  max-width: 600px;
+
+  h1 {
+    text-align: center;
+    color: $color-dark;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: $color-text-light;
+    margin-bottom: 3rem;
+  }
+
+  .contact-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: $color-dark;
+        font-weight: 600;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+        resize: none;
+
+        &:focus {
+          outline: none;
+          border-color: $color-orange;
+        }
+      }
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background-color: $color-dark;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background-color: $color-orange;
+      }
+    }
+  }
+}

@@ -1,46 +1,47 @@
-// Variables globales
-$color-bg-cream: #FAF3EF; // Couleur de fond principale (unie)
-$color-orange: #E8501D;
-$color-dark: #2D0C13;
-$header-height: 80px;
+// IMPORT DU FICHIER GLOBAL (Ajuste le chemin si besoin)
+@import '../../../styles/variables';
 
-// Couleur des rayures (un peu plus foncé que le crème)
-$color-stripe: rgba(45, 12, 19, 0.03);
+// --- CONFIGURATION LOCALE (Spécifique à la Home) ---
+$stripe-color: rgba(0, 0, 0, 0.03);
+$stripe-size: 100px;
+$stripe-width: 2px;
 
-// --- DIMENSIONS ---
 $size-center: 280px;
 $size-mid: 210px;
 $size-small: 160px;
 
 :host {
   display: block;
-  background-color: $color-bg-cream; // Fond uni pour le bas de page
+  // Utilisation de la variable globale
+  background-color: $color-bg-bottom;
   min-height: 100vh;
 }
 
 // --- HERO SECTION ---
 .hero-section {
-  position: relative; // Important pour positionner la vague
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem 8rem; // Gros padding en bas pour laisser place à la vague
+  padding: 3rem 1rem 10rem;
   overflow: hidden;
 
-  // 1. FOND RAYÉ (STRIPES)
-  background-color: $color-bg-cream;
+  // Utilisation variable globale
+  background-color: $color-bg-hero;
+
+  // Rayures
   background-image: repeating-linear-gradient(
       to right,
       transparent,
-      transparent 119px, // Largeur de l'espace vide
-      $color-stripe 119px,
-      $color-stripe 120px // Largeur de la ligne (1px)
+      transparent calc(#{$stripe-size} - #{$stripe-width}),
+      $stripe-color calc(#{$stripe-size} - #{$stripe-width}),
+      $stripe-color $stripe-size
   );
 
   .hero-content {
     position: relative;
-    z-index: 2; // Contenu au dessus de la vague
+    z-index: 2;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -82,7 +83,7 @@ $size-small: 160px;
     .hero-card-box {
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
       position: relative;
       background-color: #ddd;
 
@@ -93,28 +94,16 @@ $size-small: 160px;
         display: block;
       }
 
-      // --- POSITIONS ---
-      &.pos-0 {
-        width: $size-small; height: $size-small; z-index: 1;
-        margin-right: -50px; transform: translateY(20px) rotate(-10deg);
-      }
-      &.pos-1 {
-        width: $size-mid; height: $size-mid; z-index: 2;
-        margin-right: -50px; transform: translateY(10px) rotate(-5deg);
-      }
+      // Positions
+      &.pos-0 { width: $size-small; height: $size-small; z-index: 1; margin-right: -50px; transform: translateY(20px) rotate(-10deg); }
+      &.pos-1 { width: $size-mid; height: $size-mid; z-index: 2; margin-right: -50px; transform: translateY(10px) rotate(-5deg); }
       &.pos-2 {
         width: $size-center; height: $size-center; z-index: 10;
         transform: translateY(0) rotate(0deg);
-        box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.25);
       }
-      &.pos-3 {
-        width: $size-mid; height: $size-mid; z-index: 2;
-        margin-left: -50px; transform: translateY(10px) rotate(5deg);
-      }
-      &.pos-4 {
-        width: $size-small; height: $size-small; z-index: 1;
-        margin-left: -50px; transform: translateY(20px) rotate(10deg);
-      }
+      &.pos-3 { width: $size-mid; height: $size-mid; z-index: 2; margin-left: -50px; transform: translateY(10px) rotate(5deg); }
+      &.pos-4 { width: $size-small; height: $size-small; z-index: 1; margin-left: -50px; transform: translateY(20px) rotate(10deg); }
     }
   }
 
@@ -125,28 +114,25 @@ $size-small: 160px;
     &:hover { transform: translateY(5px); color: $color-orange; }
   }
 
-  // 2. LA VAGUE SVG
+  // VAGUE
   .wave-divider {
     position: absolute;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
     width: 100%;
     overflow: hidden;
     line-height: 0;
-    transform: rotate(180deg); // On retourne la vague pour qu'elle "coupe" le bas
+    transform: rotate(180deg);
 
     svg {
       position: relative;
       display: block;
-      width: calc(130% + 1.3px); // Un peu plus large pour éviter les trous
-      height: 120px; // Hauteur de la vague
-      left: -15%; // Centrage approximatif de la courbe
+      width: calc(100% + 1.3px);
+      height: 150px;
     }
 
     .shape-fill {
-      fill: $color-bg-cream; // Doit être la même couleur que la section suivante !
-      // Si tu veux que le fond du bas soit plus foncé, change cette couleur ici
-      // Par ex: fill: #F5EBE0;
+      fill: $color-bg-bottom;
     }
   }
 }
@@ -156,9 +142,11 @@ $size-small: 160px;
   position: sticky;
   top: $header-height;
   z-index: 900;
-  // Fond légèrement transparent pour voir passer le contenu dessous
-  background-color: rgba($color-bg-cream, 0.95);
-  backdrop-filter: blur(5px);
+
+  // Transparence 0.4 demandée
+  background-color: rgba($color-bg-bottom, 0.4);
+
+  backdrop-filter: blur(8px);
   padding: 1rem 0;
   margin-bottom: 2rem;
   box-shadow: 0 4px 10px rgba(0,0,0,0.02);
@@ -166,10 +154,9 @@ $size-small: 160px;
 
 // --- PROJECT LIST ---
 .projects-list-section {
-  max-width: 1200px;
+  max-width: $container-width; // Utilisation variable
   margin: 0 auto;
   padding: 0 2rem 4rem;
-  // Fond continue d'être crème (défini dans :host)
 
   .project-grid {
     display: grid;
@@ -179,17 +166,13 @@ $size-small: 160px;
   }
 
   .no-results {
-    text-align: center;
-    padding: 3rem;
-    grid-column: 1 / -1;
+    text-align: center; padding: 3rem; grid-column: 1 / -1;
     color: lighten($color-dark, 40%);
   }
 
   // PAGINATION
   .pagination {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
+    display: flex; justify-content: center; gap: 0.5rem;
     .page-btn {
       width: 40px; height: 40px; border-radius: 8px;
       border: 1px solid rgba($color-dark, 0.2); background: transparent;
@@ -205,15 +188,10 @@ $size-small: 160px;
 @media (max-width: 768px) {
   .hero-section {
     .hero-title-container .main-logo-text { font-size: 3rem; }
-
     .hero-gallery-fan {
-      height: auto; justify-content: flex-start;
-      overflow-x: auto; padding: 1rem; gap: 1rem;
-
+      height: auto; justify-content: flex-start; overflow-x: auto; padding: 1rem; gap: 1rem;
       .hero-card-box {
-        width: 160px !important; height: 160px !important;
-        margin: 0 !important; transform: none !important;
-        flex: 0 0 160px;
+        width: 160px !important; height: 160px !important; margin: 0 !important; transform: none !important; flex: 0 0 160px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         &.pos-2 { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
       }

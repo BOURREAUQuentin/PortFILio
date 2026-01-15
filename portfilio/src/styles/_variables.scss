@@ -1,0 +1,40 @@
+// --- PALETTE DE COULEURS ---
+$color-orange: #E8501D;
+$color-dark: #2D0C13;
+$color-text-light: lighten($color-dark, 20%); // Pour les sous-titres
+
+// Fonds
+$color-bg-top: #FFF5EE;   // Coquille d'oeuf (Hero / Rayures)
+$color-bg-bottom: #F4E7E2; // Beige rosé (Contenu principal / Bas de page)
+$color-bg-hero: #FFF5EE;   // HAUT : Coquille d'oeuf
+$color-white: #FFFFFF;
+$color-grey-light: #ddd;
+
+// --- LAYOUT ---
+$header-height: 80px;
+$container-width: 1200px;
+$border-radius-main: 20px;
+$border-radius-card: 20px;
+
+// --- MIXINS UTILES (Pour éviter de réécrire le flex partout) ---
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin page-container {
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-bottom: 6rem;
+  min-height: 60vh; // Pour que le footer ne remonte pas trop haut si peu de contenu
+}
+
+@mixin title-style {
+  font-size: 2.5rem;
+  color: $color-dark;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 800;
+}
