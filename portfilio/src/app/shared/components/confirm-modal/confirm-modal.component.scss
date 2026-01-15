@@ -1,0 +1,31 @@
+@import '../../../../styles/variables';
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5); z-index: 2000;
+  display: flex; justify-content: center; align-items: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+  background: white; padding: 2rem; border-radius: 20px;
+  width: 90%; max-width: 400px; text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  animation: scaleIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  h3 { color: $color-dark; margin-bottom: 0.5rem; font-size: 1.3rem; }
+  p { color: #666; margin-bottom: 1.5rem; }
+
+  .actions {
+    display: flex; gap: 1rem; justify-content: center;
+    button {
+      padding: 10px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; transition: transform 0.1s;
+      &:hover { transform: scale(1.05); }
+    }
+    .btn-cancel { background: #eee; color: $color-dark; }
+    .btn-confirm { background: $color-orange; color: white; }
+  }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { transform: scale(0.9); } to { transform: scale(1); } }

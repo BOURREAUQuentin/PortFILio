@@ -1,50 +1,79 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, map, tap, of } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Project } from '../models/project.model';
+import { ToastService } from './toast.service'; // 1. Import du Toast
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
 
-  private dataUrl = 'assets/data/projects.json';
+  private http = inject(HttpClient);
+  private toastService = inject(ToastService); // 2. Injection
 
-  // NOUVEAU : On stocke les projets ici pour ne pas les perdre
+  private dataUrl = 'assets/data/projects.json';
+  private storageKey = 'portfilio_projects';
+
   private projectsSubject = new BehaviorSubject<Project[]>([]);
   public projects$ = this.projectsSubject.asObservable();
 
-  // Pour savoir si on a déjà chargé les données
   private isLoaded = false;
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
-  // Nouvelle méthode optimisée
   getProjects(): Observable<Project[]> {
-    // Si les données sont déjà chargées, on renvoie ce qu'on a en mémoire
     if (this.isLoaded) {
       return this.projects$;
     }
 
-    // Sinon, on va chercher le JSON
-    return this.http.get<Project[]>(this.dataUrl).pipe(
-      tap(data => {
-        this.projectsSubject.next(data); // On met à jour la mémoire
-        this.isLoaded = true; // On note que c'est chargé
-      })
-    );
+    const storedProjects = localStorage.getItem(this.storageKey);
+
+    if (storedProjects) {
+      const projects = JSON.parse(storedProjects);
+      this.projectsSubject.next(projects);
+      this.isLoaded = true;
+      return this.projects$;
+    } else {
+      return this.http.get<Project[]>(this.dataUrl).pipe(
+        tap(data => {
+          this.projectsSubject.next(data);
+          this.isLoaded = true;
+          this.saveToStorage(data);
+        })
+      );
+    }
   }
 
-  // Modification du toggle pour qu'il mette à jour la mémoire locale aussi
   toggleFavorite(id: number): void {
     const currentProjects = this.projectsSubject.value;
-    const project = currentProjects.find(p => p.id === id);
+    const projectIndex = currentProjects.findIndex(p => p.id === id);
 
-    if (project) {
+    if (projectIndex !== -1) {
+      const updatedProjects = [...currentProjects];
+
       // On inverse la valeur
-      project.isFavorite = !project.isFavorite;
-      // On prévient tous les composants que les données ont changé
-      this.projectsSubject.next([...currentProjects]);
+      const newState = !updatedProjects[projectIndex].isFavorite;
+
+      updatedProjects[projectIndex] = {
+        ...updatedProjects[projectIndex],
+        isFavorite: newState
+      };
+
+      this.projectsSubject.next(updatedProjects);
+      this.saveToStorage(updatedProjects);
+
+      // 3. AFFICHAGE DU TOAST
+      if (newState) {
+        this.toastService.show('Projet ajouté aux favoris', 'success');
+      } else {
+        // On met 'info' ou 'success' selon ta préférence pour le retrait
+        this.toastService.show('Projet retiré des favoris', 'info');
+      }
     }
+  }
+
+  private saveToStorage(projects: Project[]): void {
+    localStorage.setItem(this.storageKey, JSON.stringify(projects));
   }
 }

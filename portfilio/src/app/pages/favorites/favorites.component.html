@@ -1,0 +1,55 @@
+<app-header variant="default"></app-header>
+
+@if (itemToDeleteId) {
+  <app-confirm-modal
+    title="Retirer des favoris ?"
+    message="Voulez-vous vraiment retirer ce projet de vos favoris ?"
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+}
+
+<main>
+  <section class="page-header">
+    <h1>Mes projets favoris</h1>
+  </section>
+
+  <div class="sticky-search-wrapper">
+    <app-search-bar
+      placeholder="Chercher dans mes favoris..."
+      (search)="onSearch($event)"
+      (sortChange)="onSort($event)">
+    </app-search-bar>
+  </div>
+
+  <section class="projects-list-section">
+    <div class="project-grid">
+      @for (proj of paginatedFavorites; track proj.id) {
+        <app-project-card
+          [project]="proj"
+          variant="normal"
+          (toggleFavorite)="initDelete($event)"> </app-project-card>
+      } @empty {
+        <div class="no-results">
+          <p>Vous n'avez aucun projet favori pour le moment.</p>
+          <p class="sub-text">Explorez l'accueil pour en ajouter !</p>
+
+          <a routerLink="/home" class="btn-home">
+            Découvrir des projets
+          </a>
+        </div>
+      }
+    </div>
+
+    @if (totalPages > 1) {
+      <div class="pagination">
+        <button class="page-btn prev" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">&lt;</button>
+        @for (page of pageNumbers; track page) {
+          <button class="page-btn number" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+        }
+        <button class="page-btn next" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">&gt;</button>
+      </div>
+    }
+  </section>
+</main>
+<app-footer></app-footer>

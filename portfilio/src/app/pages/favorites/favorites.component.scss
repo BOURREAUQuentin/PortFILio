@@ -1,0 +1,114 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  background-color: $color-bg-bottom; // Fond beige rosé partout
+  min-height: 100vh;
+}
+
+main {
+  // On compense le header fixe
+  padding-top: $header-height;
+}
+
+// --- TITRE DE LA PAGE ---
+.page-header {
+  text-align: center;
+  padding: 4rem 1rem 3rem; // Espace généreux autour du titre
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: $color-dark; // Couleur sombre #2D0C13
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+// --- STICKY SEARCH (Copie de Home) ---
+.sticky-search-wrapper {
+  position: sticky;
+  top: $header-height;
+  z-index: 900;
+
+  background-color: rgba($color-bg-bottom, 0.4);
+  backdrop-filter: blur(8px);
+
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+// --- GRILLE PROJETS ---
+.projects-list-section {
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 2rem 6rem; // Padding bas
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 1rem;
+    color: lighten($color-dark, 20%);
+    font-size: 1.2rem;
+
+    .sub-text {
+      font-size: 1rem;
+      color: lighten($color-dark, 20%);
+      margin-top: 0.5rem;
+      margin-bottom: 2rem; // Espace avant le bouton
+    }
+
+    // STYLE DU BOUTON RETOUR
+    .btn-home {
+      display: inline-block;
+      background-color: $color-orange;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba($color-orange, 0.3);
+
+      &:hover {
+        background-color: darken($color-orange, 5%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($color-orange, 0.4);
+      }
+    }
+  }
+
+  // PAGINATION
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+
+    .page-btn {
+      width: 40px; height: 40px; border-radius: 8px;
+      border: 1px solid rgba($color-dark, 0.2); background: transparent;
+      color: $color-dark; font-weight: 600; cursor: pointer; transition: all 0.2s;
+
+      &:hover:not(:disabled) { border-color: $color-orange; color: $color-orange; }
+      &.active { background-color: $color-orange; color: white; border-color: $color-orange; }
+      &:disabled { opacity: 0.3; cursor: not-allowed; }
+    }
+  }
+}
+
+// RESPONSIVE
+@media (max-width: 768px) {
+  .page-header h1 { font-size: 2.2rem; }
+  .projects-list-section {
+    padding: 0 1rem 4rem;
+    .project-grid { grid-template-columns: 1fr; }
+  }
+}
