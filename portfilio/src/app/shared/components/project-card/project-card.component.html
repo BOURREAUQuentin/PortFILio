@@ -1,10 +1,15 @@
 <article
   class="project-card"
   [ngClass]="variant"
+  [class.menu-active]="isMenuOpen"
   [routerLink]="['/project', project.id]">
 
+  @if (isMenuOpen) {
+    <div class="menu-overlay" (click)="closeMenu($event)"></div>
+  }
+
   <div class="card-image-container">
-    <img [src]="project.imageUrl" [alt]="project.title" class="project-img" />
+    <img [src]="project.imageUrl" [alt]="project.title" class="project-img" loading="lazy" />
   </div>
 
   <div class="card-content">
@@ -24,34 +29,50 @@
             [alt]="authorLabel"
             class="author-avatar" />
         }
-
         <span class="author-name">{{ authorLabel }}</span>
       </div>
 
-      <button
-        class="favorite-btn"
-        [class.active]="project.isFavorite"
-        (click)="onFavoriteClick($event)"
-        aria-label="Ajouter aux favoris">
+      <div class="card-actions">
 
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          [attr.fill]="project.isFavorite ? 'currentColor' : 'none'"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="heart-icon">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
+        @if (!isEditable) {
+          <button
+            class="action-btn fav"
+            [class.active]="project.isFavorite"
+            (click)="onFavoriteClick($event)"
+            title="Favoris">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" [attr.fill]="project.isFavorite ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+        }
 
-      </button>
+        @if (isEditable) {
+          <div class="menu-wrapper">
 
+            <button class="action-btn menu-trigger" (click)="onMenuToggle($event)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+            </button>
+
+            @if (isMenuOpen) {
+              <div class="action-dropdown">
+                <button class="dropdown-item" (click)="onEditClick($event)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  Modifier
+                </button>
+                <div class="divider"></div>
+                <button class="dropdown-item delete" (click)="onDeleteClick($event)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                  Supprimer
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+      </div>
     </div>
 
     <h3 class="card-title">{{ project.title }}</h3>
-
     <p class="card-description">{{ project.description }}</p>
 
   </div>

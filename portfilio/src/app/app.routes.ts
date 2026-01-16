@@ -6,6 +6,7 @@ import { ContactComponent } from './pages/contact/contact.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import {FavoritesComponent} from './pages/favorites/favorites.component';
+import {ProfileComponent} from './pages/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
 
   { path: 'home', component: HomeComponent },
   { path: 'favorites', component: FavoritesComponent },
+  { path: 'profile', component: ProfileComponent },
 
   { path: 'about', component: AboutComponent },
   { path: 'legal', component: LegalComponent },

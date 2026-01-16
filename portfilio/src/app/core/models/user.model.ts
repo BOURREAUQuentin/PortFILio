@@ -1,9 +1,20 @@
+export interface UserLink {
+  type: 'github' | 'linkedin' | 'instagram' | 'portfolio' | 'website' | 'other';
+  url: string;
+}
+
 export interface User {
   id: number;
   email: string;
-  password?: string; // Optionnel car on ne le stocke pas dans le state frontend une fois connecté
+  password?: string;
   firstName: string;
   lastName: string;
   promo?: string;
+
+  title?: string;
+  description?: string;
   avatarUrl?: string;
+
+  // NOUVEAU : Un tableau flexible de liens
+  links?: UserLink[];
 }

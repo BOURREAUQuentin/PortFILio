@@ -1,0 +1,114 @@
+<app-header variant="default"></app-header>
+
+@if (projectToDeleteId) {
+  <app-confirm-modal
+    title="Supprimer le projet ?"
+    message="Cette action est irréversible. Le projet sera définitivement retiré."
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+}
+
+<main class="profile-page">
+
+  <div class="profile-layout">
+
+    <aside class="profile-sidebar">
+
+      <div class="identity-block">
+
+        <div class="avatar-wrapper">
+          <img [src]="currentUser?.avatarUrl || 'assets/images/no_image.jpg'" alt="Avatar" class="avatar-img">
+        </div>
+
+        <div class="identity-info">
+          <h2 class="lastname">{{ currentUser?.lastName | uppercase }}</h2>
+          <h2 class="firstname">{{ currentUser?.firstName }}</h2>
+
+          <button class="btn-edit-profile">
+            Éditer votre profil
+          </button>
+        </div>
+
+      </div>
+
+      <div class="bio-block">
+        <h3 class="section-title">Biographie</h3>
+        <p class="bio-text">{{ userDescription }}</p>
+      </div>
+
+      @if (currentUser?.links && currentUser!.links!.length > 0) {
+        <div class="links-block">
+          <h3 class="section-title">Mes liens</h3>
+          <div class="links-list">
+
+            @for (link of currentUser!.links; track link.url) {
+              <a [href]="link.url" target="_blank" class="social-link-item" [title]="link.type">
+
+                @switch (link.type) {
+                  @case ('github') {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                  }
+                  @case ('linkedin') {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                  }
+                  @case ('instagram') {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  }
+                  @case ('portfolio') {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    <span class="portfolio-label">Portfolio</span>
+                  }
+                  @default {
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                  }
+                }
+              </a>
+            }
+          </div>
+        </div>
+      }
+
+    </aside>
+
+    <div class="profile-content">
+      <div class="content-header">
+        <h2>Vos projets</h2>
+      </div>
+
+      <div class="create-card-placeholder">
+        <span>+ Créer un nouveau projet</span>
+      </div>
+
+      <div class="projects-grid">
+        @for (proj of paginatedProjects; track proj.id) {
+          <app-project-card
+            [project]="proj"
+            variant="small"
+            [isEditable]="true"
+            (toggleFavorite)="onToggleFavorite($event)"
+            (edit)="onEditProject($event)"
+            (delete)="onDeleteRequest($event)">
+          </app-project-card>
+        } @empty {
+          <div class="no-projects">
+            <p>Vous n'avez participé à aucun projet.</p>
+          </div>
+        }
+      </div>
+
+      @if (totalPages > 1) {
+        <div class="pagination">
+          <button class="page-btn prev" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">&lt;</button>
+          @for (page of pageNumbers; track page) {
+            <button class="page-btn number" [class.active]="page === currentPage" (click)="goToPage(page)">{{ page }}</button>
+          }
+          <button class="page-btn next" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">&gt;</button>
+        </div>
+      }
+    </div>
+
+  </div>
+</main>
+
+<app-footer></app-footer>

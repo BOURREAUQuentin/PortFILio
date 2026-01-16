@@ -76,4 +76,20 @@ export class ProjectService {
   private saveToStorage(projects: Project[]): void {
     localStorage.setItem(this.storageKey, JSON.stringify(projects));
   }
+
+  deleteProject(id: number): void {
+    const currentProjects = this.projectsSubject.value;
+
+    // On garde tout SAUF celui qui a l'ID à supprimer
+    const updatedProjects = currentProjects.filter(p => p.id !== id);
+
+    // 1. Mise à jour de l'observable (l'interface réagira)
+    this.projectsSubject.next(updatedProjects);
+
+    // 2. Sauvegarde persistante
+    this.saveToStorage(updatedProjects);
+
+    // 3. Notification
+    this.toastService.show('Projet supprimé avec succès.', 'success');
+  }
 }

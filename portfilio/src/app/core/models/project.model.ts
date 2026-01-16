@@ -1,6 +1,7 @@
 export interface Author {
+  id: number; // LE LIEN CLÉ avec users.json
   name: string;
-  avatarUrl?: string; // Optionnel (sinon placeholder)
+  avatarUrl?: string;
 }
 
 export interface Project {
@@ -8,14 +9,10 @@ export interface Project {
   title: string;
   description: string;
   imageUrl: string;
-  authors: Author[];
+  authors: Author[]; // Tableau d'auteurs avec ID
   isFavorite: boolean;
-
-  // Ajoutés pour correspondre au JSON et aux fonctionnalités :
-  tags: string[];      // Pour la recherche et les filtres
-  promo: string;       // Pour le tag sur le carousel (ex: "A1", "A3")
-
-  // Optionnels (utiles pour la future page de détails)
+  tags: string[];
+  promo: string;
   links?: {
     github?: string;
     slides?: string;

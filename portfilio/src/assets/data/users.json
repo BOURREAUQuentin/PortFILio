@@ -1,18 +1,27 @@
 [
   {
     "id": 1,
-    "email": "jules@fil.com",
-    "password": "123",
-    "firstName": "Jules",
-    "lastName": "Autret",
-    "promo": "A1"
-  },
-  {
-    "id": 2,
     "email": "quentin@fil.com",
     "password": "123",
     "firstName": "Quentin",
     "lastName": "Bourreau",
-    "promo": "A1"
+    "promo": "A1",
+    "title": "Développeur Back-End",
+    "description": "Étudiant ingénieur passionné par le développement web et l'IoT. Toujours à la recherche de nouveaux défis.",
+    "links": [
+      { "type": "github", "url": "https://github.com/quentin" },
+      { "type": "linkedin", "url": "https://linkedin.com/in/quentin" },
+      { "type": "portfolio", "url": "https://mon-site.com" }
+    ]
+  },
+  {
+    "id": 2,
+    "email": "jules@fil.com",
+    "password": "123",
+    "firstName": "Jules",
+    "lastName": "Autret",
+    "promo": "A1",
+    "title": "Développeur Front-End",
+    "description": "Passionné par Angular et l'UX Design."
   }
 ]

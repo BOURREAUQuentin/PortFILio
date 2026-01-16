@@ -5,7 +5,7 @@
     "description": "Première itération du portfolio étudiant. Développement d'une interface responsive et gestion des profils utilisateurs.",
     "imageUrl": "https://picsum.photos/seed/proj1/800/600",
     "authors": [
-      { "name": "Jules Autret", "avatarUrl": "https://ui-avatars.com/api/?name=Jules+Autret&background=E8501D&color=fff" }
+      { "id": 2, "name": "Jules Autret", "avatarUrl": "https://ui-avatars.com/api/?name=Jules+Autret&background=E8501D&color=fff" }
     ],
     "tags": ["Angular", "Figma", "Frontend"],
     "promo": "A1",
@@ -17,9 +17,9 @@
     "description": "Solution de covoiturage interne pour les étudiants. Algorithme de matching et calcul d'itinéraires via API Google Maps.",
     "imageUrl": "https://picsum.photos/seed/proj2/800/600",
     "authors": [
-      { "name": "Quentin Bourreau" },
-      { "name": "Aloïs Fleury" },
-      { "name": "Jules Autret" }
+      { "id": 1, "name": "Quentin Bourreau" },
+      { "id": 3, "name": "Aloïs Fleury" },
+      { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["Flutter", "Firebase", "Mobile"],
     "promo": "A1",
@@ -31,7 +31,7 @@
     "description": "Outil en ligne de commande pour intercepter et analyser les paquets TCP/IP en temps réel.",
     "imageUrl": "https://picsum.photos/seed/proj3/800/600",
     "authors": [
-      { "name": "Aloïs Fleury", "avatarUrl": "https://ui-avatars.com/api/?name=Alois+Fleury&background=0D8ABC&color=fff" }
+      { "id": 3, "name": "Aloïs Fleury", "avatarUrl": "https://ui-avatars.com/api/?name=Alois+Fleury&background=0D8ABC&color=fff" }
     ],
     "tags": ["C++", "Réseau", "Linux"],
     "promo": "A2",
@@ -43,8 +43,8 @@
     "description": "Interface de visualisation des données capteurs (température, humidité) avec graphiques temps réel.",
     "imageUrl": "https://picsum.photos/seed/proj4/800/600",
     "authors": [
-      { "name": "Sarah Connor" },
-      { "name": "John Doe" }
+      { "id": 4, "name": "Sarah Connor" },
+      { "id": 5, "name": "John Doe" }
     ],
     "tags": ["React", "D3.js", "IOT"],
     "promo": "A1",
@@ -56,7 +56,7 @@
     "description": "Réimplémentation du célèbre jeu d'arcade en Java avec le moteur graphique LibGDX.",
     "imageUrl": "https://picsum.photos/seed/proj5/800/600",
     "authors": [
-      { "name": "Quentin Bourreau", "avatarUrl": "https://ui-avatars.com/api/?name=Quentin+Bourreau&background=2D0C13&color=fff" }
+      { "id": 1, "name": "Quentin Bourreau", "avatarUrl": "https://ui-avatars.com/api/?name=Quentin+Bourreau&background=2D0C13&color=fff" }
     ],
     "tags": ["Java", "GameDev", "OOP"],
     "promo": "A1",
@@ -68,10 +68,10 @@
     "description": "Entraînement d'un modèle CNN pour reconnaître les différentes espèces de chats et chiens.",
     "imageUrl": "https://picsum.photos/seed/proj6/800/600",
     "authors": [
-      { "name": "Alice Martin" },
-      { "name": "Bob Dupuis" },
-      { "name": "Charlie Dreem" },
-      { "name": "David Leroi" }
+      { "id": 6, "name": "Alice Martin" },
+      { "id": 7, "name": "Bob Dupuis" },
+      { "id": 8, "name": "Charlie Dreem" },
+      { "id": 9, "name": "David Leroi" }
     ],
     "tags": ["Python", "TensorFlow", "IA"],
     "promo": "A3",
@@ -83,7 +83,7 @@
     "description": "Refonte complète du site du Bureau Des Étudiants. Intégration d'une billetterie en ligne.",
     "imageUrl": "https://picsum.photos/seed/proj7/800/600",
     "authors": [
-      { "name": "Jules Autret", "avatarUrl": "https://ui-avatars.com/api/?name=Jules+Autret&background=E8501D&color=fff" }
+      { "id": 2, "name": "Jules Autret", "avatarUrl": "https://ui-avatars.com/api/?name=Jules+Autret&background=E8501D&color=fff" }
     ],
     "tags": ["Wordpress", "PHP", "Web"],
     "promo": "A1",
@@ -95,7 +95,7 @@
     "description": "Un outil simple pour gérer sa ToDo list directement depuis le terminal. Stockage fichier local.",
     "imageUrl": "https://picsum.photos/seed/proj8/800/600",
     "authors": [
-      { "name": "Thomas Anderson" }
+      { "id": 10, "name": "Thomas Anderson" }
     ],
     "tags": ["Rust", "CLI", "System"],
     "promo": "A2",
@@ -107,8 +107,8 @@
     "description": "Comparaison visuelle des algorithmes A*, Dijkstra et BFS sur une grille interactive.",
     "imageUrl": "https://picsum.photos/seed/proj9/800/600",
     "authors": [
-      { "name": "Quentin Bourreau" },
-      { "name": "Jules Autret" }
+      { "id": 1, "name": "Quentin Bourreau" },
+      { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["JavaScript", "Algo", "Web"],
     "promo": "A1",
@@ -120,7 +120,7 @@
     "description": "Création d'un compilateur pour un sous-ensemble du langage C. Analyse lexicale et syntaxique.",
     "imageUrl": "https://picsum.photos/seed/proj10/800/600",
     "authors": [
-      { "name": "Aloïs Fleury" }
+      { "id": 3, "name": "Aloïs Fleury" }
     ],
     "tags": ["Ocaml", "Compilation", "Théorie"],
     "promo": "A2",
@@ -132,8 +132,8 @@
     "description": "Application Java Swing pour la gestion des emprunts de livres de la bibliothèque de l'école.",
     "imageUrl": "https://picsum.photos/seed/proj11/800/600",
     "authors": [
-      { "name": "Groupe A" },
-      { "name": "Groupe B" }
+      { "id": 11, "name": "Groupe A" },
+      { "id": 12, "name": "Groupe B" }
     ],
     "tags": ["Java", "Swing", "SQL"],
     "promo": "A1",
@@ -145,7 +145,7 @@
     "description": "Mise en place de conteneurs Docker pour l'environnement de développement de la promo.",
     "imageUrl": "https://picsum.photos/seed/proj12/800/600",
     "authors": [
-      { "name": "Sophie Fonfec" }
+      { "id": 13, "name": "Sophie Fonfec" }
     ],
     "tags": ["Docker", "DevOps", "Linux"],
     "promo": "A3",
@@ -157,7 +157,7 @@
     "description": "Reproduction de l'interface de Netflix pour apprendre les animations CSS et la gestion du state.",
     "imageUrl": "https://picsum.photos/seed/proj13/800/600",
     "authors": [
-      { "name": "Jules Autret" }
+      { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["React", "CSS", "Frontend"],
     "promo": "A1",
@@ -169,8 +169,8 @@
     "description": "Bot capable de répondre aux questions fréquentes des utilisateurs via une API NLP.",
     "imageUrl": "https://picsum.photos/seed/proj14/800/600",
     "authors": [
-      { "name": "Team AI" },
-      { "name": "Team Web" }
+      { "id": 14, "name": "Team AI" },
+      { "id": 15, "name": "Team Web" }
     ],
     "tags": ["Python", "NLP", "API"],
     "promo": "A3",
@@ -182,7 +182,7 @@
     "description": "Rapport de tests d'intrusion effectués sur une machine virtuelle vulnérable (CTF).",
     "imageUrl": "https://picsum.photos/seed/proj15/800/600",
     "authors": [
-      { "name": "Mr Robot" }
+      { "id": 16, "name": "Mr Robot" }
     ],
     "tags": ["Security", "Kali", "Network"],
     "promo": "A2",
@@ -194,8 +194,8 @@
     "description": "Application mobile utilisant le microphone pour aider à accorder une guitare via FFT.",
     "imageUrl": "https://picsum.photos/seed/proj16/800/600",
     "authors": [
-      { "name": "Music Man" },
-      { "name": "Sound Guy" }
+      { "id": 17, "name": "Music Man" },
+      { "id": 18, "name": "Sound Guy" }
     ],
     "tags": ["Kotlin", "Android", "DSP"],
     "promo": "A2",
@@ -207,7 +207,7 @@
     "description": "Site minimaliste pour un ami architecte, focus sur les grandes images et la typographie.",
     "imageUrl": "https://picsum.photos/seed/proj17/800/600",
     "authors": [
-      { "name": "Quentin Bourreau" }
+      { "id": 1, "name": "Quentin Bourreau" }
     ],
     "tags": ["Vue.js", "Design", "Web"],
     "promo": "A1",
@@ -219,7 +219,7 @@
     "description": "Script Python pour recevoir des alertes Discord lors de la publication de nouvelles annonces.",
     "imageUrl": "https://picsum.photos/seed/proj18/800/600",
     "authors": [
-      { "name": "Aloïs Fleury" }
+      { "id": 3, "name": "Aloïs Fleury" }
     ],
     "tags": ["Python", "Scraping", "Discord"],
     "promo": "A1",
@@ -231,8 +231,8 @@
     "description": "Plateforme de jeu d'échecs en temps réel utilisant les WebSockets.",
     "imageUrl": "https://picsum.photos/seed/proj19/800/600",
     "authors": [
-      { "name": "Grand Master" },
-      { "name": "Novice Dev" }
+      { "id": 19, "name": "Grand Master" },
+      { "id": 20, "name": "Novice Dev" }
     ],
     "tags": ["Node.js", "Socket.io", "Web"],
     "promo": "A3",
@@ -244,7 +244,7 @@
     "description": "POC d'un système de vote décentralisé basé sur Ethereum pour les élections du BDE.",
     "imageUrl": "https://picsum.photos/seed/proj20/800/600",
     "authors": [
-      { "name": "Satoshi N." }
+      { "id": 21, "name": "Satoshi N." }
     ],
     "tags": ["Solidity", "Blockchain", "Web3"],
     "promo": "A3",
