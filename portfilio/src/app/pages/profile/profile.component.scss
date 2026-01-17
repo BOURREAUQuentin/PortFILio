@@ -9,9 +9,17 @@
 .profile-page {
   max-width: 1600px; // On permet d'aller large si l'écran est géant
   margin: 0 auto;
+  padding: calc(#{$header-height} + 2rem) 10rem 4rem;
 
-  // MODIF IMPORTANTE : Padding latéral augmenté (10rem) pour compresser le contenu
-  padding: calc(#{$header-height} + 3rem) 10rem 4rem;
+  // NOUVEAU STYLE TITRE
+  .page-title {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: $color-dark;
+    margin-bottom: 3rem; // Espace avant les colonnes
+  }
 
   .profile-layout {
     display: grid;

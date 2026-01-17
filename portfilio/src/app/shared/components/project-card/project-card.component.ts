@@ -24,7 +24,7 @@ export class ProjectCardComponent {
 
   get isGroup(): boolean { return this.project.authors.length > 1; }
   get authorLabel(): string {
-    if (this.isGroup) return 'Projet de groupe';
+    if (this.isGroup) return `${this.project.authors.length} participants`;
     return this.project.authors[0].name;
   }
 
