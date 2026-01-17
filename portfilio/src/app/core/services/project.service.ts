@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Project } from '../models/project.model';
-import { ToastService } from './toast.service'; // 1. Import du Toast
+import { ToastService } from './toast.service';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,86 +11,96 @@ import { ToastService } from './toast.service'; // 1. Import du Toast
 export class ProjectService {
 
   private http = inject(HttpClient);
-  private toastService = inject(ToastService); // 2. Injection
+  private toastService = inject(ToastService);
 
-  private dataUrl = 'assets/data/projects.json';
-  private storageKey = 'portfilio_projects';
-
+  // BehaviorSubject contient les données "brutes" (telles que stockées en JSON/Storage)
   private projectsSubject = new BehaviorSubject<Project[]>([]);
-  public projects$ = this.projectsSubject.asObservable();
 
-  private isLoaded = false;
+  constructor() {
+    this.loadProjects();
+  }
 
-  constructor() { }
-
-  getProjects(): Observable<Project[]> {
-    if (this.isLoaded) {
-      return this.projects$;
-    }
-
-    const storedProjects = localStorage.getItem(this.storageKey);
-
+  private loadProjects(): void {
+    const storedProjects = localStorage.getItem('portfilio_projects');
     if (storedProjects) {
-      const projects = JSON.parse(storedProjects);
-      this.projectsSubject.next(projects);
-      this.isLoaded = true;
-      return this.projects$;
+      this.projectsSubject.next(JSON.parse(storedProjects));
     } else {
-      return this.http.get<Project[]>(this.dataUrl).pipe(
-        tap(data => {
+      this.http.get<Project[]>('assets/data/projects.json').subscribe({
+        next: (data) => {
           this.projectsSubject.next(data);
-          this.isLoaded = true;
           this.saveToStorage(data);
-        })
-      );
+        },
+        error: (err) => console.error('Erreur chargement projets', err)
+      });
     }
   }
 
-  toggleFavorite(id: number): void {
+  /**
+   * C'EST ICI QUE LA MAGIE OPÈRE (HYDRATATION)
+   * On retourne un Observable qui modifie les données à la volée avant de les donner au composant.
+   */
+  getProjects(): Observable<Project[]> {
+    return this.projectsSubject.asObservable().pipe(
+      map(projects => {
+        // 1. On lit les users à jour (qui contiennent potentiellement la nouvelle photo Base64)
+        const usersRaw = localStorage.getItem('portfilio_users');
+        const users: User[] = usersRaw ? JSON.parse(usersRaw) : [];
+
+        // 2. On parcourt les projets pour mettre à jour leurs auteurs
+        return projects.map(project => {
+
+          const updatedAuthors = project.authors.map(author => {
+            // On cherche le User correspondant (avec conversion String/Number par sécurité)
+            const realUser = users.find(u => Number(u.id) === Number(author.id));
+
+            if (realUser) {
+              // Si trouvé, on fusionne les infos :
+              // On garde l'ID de l'auteur, mais on prend le Nom et l'Avatar du User à jour
+              return {
+                ...author,
+                name: `${realUser.firstName} ${realUser.lastName}`,
+                // Priorité à l'avatar du User (Base64), sinon celui de l'auteur (json), sinon undefined
+                avatarUrl: realUser.avatarUrl || author.avatarUrl
+              };
+            }
+            return author;
+          });
+
+          // On retourne une COPIE du projet avec les auteurs mis à jour
+          return { ...project, authors: updatedAuthors };
+        });
+      })
+    );
+  }
+
+  toggleFavorite(projectId: number): void {
     const currentProjects = this.projectsSubject.value;
-    const projectIndex = currentProjects.findIndex(p => p.id === id);
-
-    if (projectIndex !== -1) {
-      const updatedProjects = [...currentProjects];
-
-      // On inverse la valeur
-      const newState = !updatedProjects[projectIndex].isFavorite;
-
-      updatedProjects[projectIndex] = {
-        ...updatedProjects[projectIndex],
-        isFavorite: newState
-      };
-
-      this.projectsSubject.next(updatedProjects);
-      this.saveToStorage(updatedProjects);
-
-      // 3. AFFICHAGE DU TOAST
-      if (newState) {
-        this.toastService.show('Projet ajouté aux favoris', 'success');
-      } else {
-        // On met 'info' ou 'success' selon ta préférence pour le retrait
-        this.toastService.show('Projet retiré des favoris', 'info');
+    // On travaille sur une copie pour le changement d'état
+    const updatedProjects = currentProjects.map(p => {
+      if (p.id === projectId) {
+        const newState = !p.isFavorite;
+        const msg = newState ? 'Projet ajouté aux favoris' : 'Projet retiré des favoris';
+        this.toastService.show(msg, 'success');
+        return { ...p, isFavorite: newState };
       }
-    }
-  }
+      return p;
+    });
 
-  private saveToStorage(projects: Project[]): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(projects));
+    this.projectsSubject.next(updatedProjects);
+    this.saveToStorage(updatedProjects);
   }
 
   deleteProject(id: number): void {
     const currentProjects = this.projectsSubject.value;
-
-    // On garde tout SAUF celui qui a l'ID à supprimer
     const updatedProjects = currentProjects.filter(p => p.id !== id);
 
-    // 1. Mise à jour de l'observable (l'interface réagira)
     this.projectsSubject.next(updatedProjects);
-
-    // 2. Sauvegarde persistante
     this.saveToStorage(updatedProjects);
-
-    // 3. Notification
     this.toastService.show('Projet supprimé avec succès.', 'success');
+  }
+
+  // Sauvegarde les projets BRUTS (sans l'avatar Base64 du User pour ne pas surcharger le storage 'portfilio_projects')
+  private saveToStorage(projects: Project[]): void {
+    localStorage.setItem('portfilio_projects', JSON.stringify(projects));
   }
 }

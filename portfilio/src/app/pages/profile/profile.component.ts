@@ -9,11 +9,12 @@ import { User } from '../../core/models/user.model';
 import { Project } from '../../core/models/project.model';
 import {ConfirmModalComponent} from '../../shared/components/confirm-modal/confirm-modal.component';
 import {RouterLink} from '@angular/router';
+import {AvatarComponent} from '../../shared/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, ProjectCardComponent, ConfirmModalComponent, RouterLink],
+  imports: [CommonModule, HeaderComponent, FooterComponent, ProjectCardComponent, ConfirmModalComponent, RouterLink, AvatarComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
@@ -116,5 +117,10 @@ export class ProfileComponent implements OnInit {
       // On ferme la popup
       this.projectToDeleteId = null;
     }
+  }
+
+  get userFullName(): string {
+    if (!this.currentUser) return '';
+    return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
   }
 }

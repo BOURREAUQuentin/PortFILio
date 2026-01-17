@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Project } from '../../../core/models/project.model';
+import {AvatarComponent} from '../avatar/avatar.component';
 
 @Component({
   selector: 'app-project-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, AvatarComponent],
   templateUrl: './project-card.component.html',
   styleUrls: ['./project-card.component.scss']
 })

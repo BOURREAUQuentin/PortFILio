@@ -5,7 +5,7 @@
     "description": "Première itération du portfolio étudiant. Développement d'une interface responsive et gestion des profils utilisateurs.",
     "imageUrl": "https://picsum.photos/seed/proj1/800/600",
     "authors": [
-      { "id": 2, "name": "Jules Autret", "avatarUrl": "https://ui-avatars.com/api/?name=Jules+Autret&background=E8501D&color=fff" }
+      { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["Angular", "Figma", "Frontend"],
     "promo": "A1",
@@ -31,7 +31,7 @@
     "description": "Outil en ligne de commande pour intercepter et analyser les paquets TCP/IP en temps réel.",
     "imageUrl": "https://picsum.photos/seed/proj3/800/600",
     "authors": [
-      { "id": 3, "name": "Aloïs Fleury", "avatarUrl": "https://ui-avatars.com/api/?name=Alois+Fleury&background=0D8ABC&color=fff" }
+      { "id": 3, "name": "Aloïs Fleury" }
     ],
     "tags": ["C++", "Réseau", "Linux"],
     "promo": "A2",
@@ -56,7 +56,7 @@
     "description": "Réimplémentation du célèbre jeu d'arcade en Java avec le moteur graphique LibGDX.",
     "imageUrl": "https://picsum.photos/seed/proj5/800/600",
     "authors": [
-      { "id": 1, "name": "Quentin Bourreau", "avatarUrl": "https://ui-avatars.com/api/?name=Quentin+Bourreau&background=2D0C13&color=fff" }
+      { "id": 1, "name": "Quentin Bourreau" }
     ],
     "tags": ["Java", "GameDev", "OOP"],
     "promo": "A1",
@@ -83,7 +83,7 @@
     "description": "Refonte complète du site du Bureau Des Étudiants. Intégration d'une billetterie en ligne.",
     "imageUrl": "https://picsum.photos/seed/proj7/800/600",
     "authors": [
-      { "id": 2, "name": "Jules Autret", "avatarUrl": "https://ui-avatars.com/api/?name=Jules+Autret&background=E8501D&color=fff" }
+      { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["Wordpress", "PHP", "Web"],
     "promo": "A1",

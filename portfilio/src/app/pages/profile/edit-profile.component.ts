@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -8,11 +8,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { User, UserLink } from '../../core/models/user.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
+import {AvatarComponent} from '../../shared/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, DragDropModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, DragDropModule, HeaderComponent, AvatarComponent],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
@@ -22,17 +23,30 @@ export class EditProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   currentUser: User | null = null;
   profileForm!: FormGroup;
 
+  // NOUVEAU : Pour stocker l'URL Base64 temporaire de la nouvelle image
+  tempAvatarUrl: string | null = null;
+
+  // Helper pour le nom complet dans le template
+  get userFullName(): string {
+    if (!this.currentUser) return '';
+    return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+  }
+
+  // Limite de taille (ex: 2MB)
+  readonly MAX_FILE_SIZE = 2 * 1024 * 1024;
+
   // Liste des réseaux supportés
   readonly linkTypes = [
-    { value: 'linkedin', label: 'LinkedIn', icon: 'assets/icons/linkedin.svg' }, // ou SVG inline plus tard
-    { value: 'github', label: 'GitHub', icon: 'assets/icons/github.svg' },
-    { value: 'instagram', label: 'Instagram', icon: 'assets/icons/instagram.svg' },
-    { value: 'website', label: 'Site Web', icon: 'assets/icons/globe.svg' },
-    { value: 'portfolio', label: 'Portfolio', icon: 'assets/icons/briefcase.svg' }
+    { value: 'linkedin', label: 'LinkedIn' },
+    { value: 'github', label: 'GitHub' },
+    { value: 'instagram', label: 'Instagram' },
+    { value: 'website', label: 'Site Web' },
+    { value: 'portfolio', label: 'Portfolio' }
   ];
 
   ngOnInit(): void {
@@ -104,6 +118,50 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  // --- GESTION IMAGE ---
+
+  onRemoveAvatar(): void {
+    // On marque pour suppression en mettant une chaîne vide
+    this.tempAvatarUrl = '';
+    // Si un fichier était sélectionné dans l'input, on le reset
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    // 1. Validations basiques
+    if (!file.type.startsWith('image/')) {
+      this.toastService.show("Veuillez sélectionner un fichier image valide.", "error");
+      return;
+    }
+
+    if (file.size > this.MAX_FILE_SIZE) {
+      this.toastService.show("L'image est trop volumineuse (Max 2Mo).", "error");
+      return;
+    }
+
+    // 2. Lecture du fichier et conversion en Base64
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      // Le résultat est une chaîne Base64 (data:image/png;base64,...)
+      this.tempAvatarUrl = e.target.result;
+
+      // Force la détection de changement pour afficher la preview
+      this.cdr.markForCheck();
+    };
+
+    reader.readAsDataURL(file); // Lance la lecture
+  }
+
   // --- SOUMISSION ---
 
   onSubmit(): void {
@@ -115,18 +173,26 @@ export class EditProfileComponent implements OnInit {
 
     if (!this.currentUser) return;
 
-    // Construction de l'objet User mis à jour
     const formValue = this.profileForm.value;
+
+    // 1. Par défaut, on garde l'URL actuelle.
+    let finalAvatarUrl = this.currentUser.avatarUrl;
+
+    // 2. Si tempAvatarUrl n'est PAS null, ça veut dire qu'on y a touché.
+    //    Que ce soit une nouvelle image ('data:...') OU une suppression (''), on prend cette valeur.
+    if (this.tempAvatarUrl !== null) {
+      finalAvatarUrl = this.tempAvatarUrl;
+    }
 
     const updatedUser: User = {
       ...this.currentUser,
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       description: formValue.description,
-      links: formValue.links // Le tableau est déjà dans le bon format
+      links: formValue.links,
+      avatarUrl: finalAvatarUrl // On utilise l'URL calculée ci-dessus
     };
 
-    // Sauvegarde + Redirection
     this.authService.updateUser(updatedUser);
     this.toastService.show('Profil mis à jour avec succès !', 'success');
     this.router.navigate(['/profile']);

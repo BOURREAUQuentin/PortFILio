@@ -114,8 +114,25 @@ export class AuthService {
     const users = this.getUsersFromStorage();
     const index = users.findIndex(u => u.id === updatedUser.id);
     if (index !== -1) {
-      users[index] = updatedUser;
+      // 3. Récupérer l'utilisateur COMPLET existant en base (avec son password)
+      const existingUserInDb = users[index];
+
+      // 4. FUSION INTELLIGENTE
+      // On prend l'objet complet de la DB (avec pwd) et on écrase avec les nouvelles données.
+      // On force explicitement le maintien du mot de passe et de l'email de la DB pour être sûr.
+      const finalUser: User = {
+        ...existingUserInDb, // Garde tout ce qu'il y avait avant (dont le password)
+        ...updatedUser,      // Écrase avec les nouvelles infos (Nom, Avatar, Links...)
+        password: existingUserInDb.password, // Sécurité : On remet le mdp d'origine
+        email: existingUserInDb.email        // Sécurité : On garde l'email d'origine
+      };
+
+      // 5. Sauvegarde dans le localStorage
+      users[index] = finalUser;
       localStorage.setItem(this.usersKey, JSON.stringify(users));
+
+      // 6. Mise à jour de la session active (Observable)
+      this.setCurrentUser(finalUser);
     }
 
     // 2. Mise à jour de la session courante

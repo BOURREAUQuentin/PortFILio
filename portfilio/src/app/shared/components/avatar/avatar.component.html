@@ -1,0 +1,7 @@
+<div class="avatar-container" [ngClass]="size" [style.background-color]="backgroundColor">
+  @if (imageUrl) {
+    <img [src]="imageUrl" [alt]="name" class="avatar-img">
+  } @else {
+    <span class="initials">{{ initials }}</span>
+  }
+</div>

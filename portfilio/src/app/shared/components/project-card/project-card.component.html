@@ -19,13 +19,16 @@
       <div class="author-info">
         @if (isGroup) {
           <div class="icon-group">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="group-svg">
-              <path d="M17 20h5v-2a3 3 0 0 0-5.3-1.12.5.5 0 1 1-.88-.48A4 4 0 0 1 24 18v4h-7v-2zm-3-4a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v4h14v-4zM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm10-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-7-1a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="group-svg"><path d="M17 20h5v-2a3 3 0 0 0-5.3-1.12.5.5 0 1 1-.88-.48A4 4 0 0 1 24 18v4h-7v-2zm-3-4a4 4 0 0 0-4-4H4a4 4 0 0 0-4 4v4h14v-4zM7 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm10-3a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-7-1a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
           </div>
         } @else {
-          <img [src]="project.authors[0].avatarUrl || 'assets/images/no_image.jpg'" [alt]="authorLabel" class="author-avatar" />
+          <app-avatar
+            [imageUrl]="project.authors[0].avatarUrl"
+            [name]="authorLabel"
+            [size]="variant === 'small' ? 'small' : 'medium'">
+          </app-avatar>
         }
+
         <span class="author-name">{{ authorLabel }}</span>
       </div>
 

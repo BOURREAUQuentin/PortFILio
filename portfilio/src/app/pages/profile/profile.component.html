@@ -19,9 +19,11 @@
 
       <div class="identity-block">
 
-        <div class="avatar-wrapper">
-          <img [src]="currentUser?.avatarUrl || 'assets/images/no_image.jpg'" alt="Avatar" class="avatar-img">
-        </div>
+        <app-avatar
+          [imageUrl]="currentUser?.avatarUrl"
+          [name]="userFullName"
+          size="large">
+        </app-avatar>
 
         <div class="identity-info">
           <h2 class="lastname">{{ currentUser?.lastName | uppercase }}</h2>
