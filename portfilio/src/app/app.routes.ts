@@ -7,6 +7,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import {FavoritesComponent} from './pages/favorites/favorites.component';
 import {ProfileComponent} from './pages/profile/profile.component';
+import {EditProfileComponent} from './pages/profile/edit-profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'favorites', component: FavoritesComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'edit-profile', component: EditProfileComponent },
 
   { path: 'about', component: AboutComponent },
   { path: 'legal', component: LegalComponent },

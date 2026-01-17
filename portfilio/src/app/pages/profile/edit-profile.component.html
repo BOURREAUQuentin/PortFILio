@@ -1,0 +1,83 @@
+<app-header variant="default"></app-header>
+
+<main class="edit-page">
+  <div class="edit-card">
+
+    <h2>Modification du profil</h2>
+
+    <div class="avatar-section">
+      <div class="avatar-preview">
+        @if(currentUser?.avatarUrl) {
+          <img [src]="currentUser?.avatarUrl" class="img-fit">
+        }
+      </div>
+      <button type="button" class="btn-change-photo">Changer</button>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>Nom <span class="req">*</span></label>
+        <input type="text" formControlName="lastName" placeholder="Entrez votre nom...">
+      </div>
+
+      <div class="form-group">
+        <label>Prénom <span class="req">*</span></label>
+        <input type="text" formControlName="firstName" placeholder="Entrez votre prénom...">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description" rows="4" placeholder="Entrez une description pour votre profil..."></textarea>
+      </div>
+
+      <div class="links-section">
+        <label class="section-label">Liens externes</label>
+
+        <div cdkDropList (cdkDropListDropped)="drop($event)" class="links-list">
+
+          @for (linkCtrl of linksArray.controls; track linkCtrl; let i = $index) {
+
+            <div class="link-row" cdkDrag [formGroup]="$any(linkCtrl)">
+
+              <div class="drag-handle" cdkDragHandle>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+              </div>
+
+              <div class="select-wrapper">
+                <select formControlName="type">
+                  <option value="" disabled>Choisir...</option>
+                  @for (type of getAvailableTypes(i); track type.value) {
+                    <option [value]="type.value">{{ type.label }}</option>
+                  }
+                </select>
+                <span class="chevron">▼</span>
+              </div>
+
+              <span class="at-symbol">@</span>
+
+              <input type="text" formControlName="url" placeholder="pseudo ou url...">
+
+              <button type="button" class="btn-delete" (click)="removeLink(i)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+              </button>
+
+            </div>
+          }
+
+        </div>
+
+        <button type="button" class="btn-add-link" (click)="addLink()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+          Nouvelle option
+        </button>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">Annuler</button>
+        <button type="submit" class="btn-submit">Valider</button>
+      </div>
+
+    </form>
+  </div>
+</main>

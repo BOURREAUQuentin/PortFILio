@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ProjectCardComponent } from '../../shared/components/project-card/project-card.component';
@@ -9,6 +8,7 @@ import { ProjectService } from '../../core/services/project.service';
 import { User } from '../../core/models/user.model';
 import { Project } from '../../core/models/project.model';
 import {ConfirmModalComponent} from '../../shared/components/confirm-modal/confirm-modal.component';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-profile',

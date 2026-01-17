@@ -106,4 +106,19 @@ export class AuthService {
     localStorage.setItem(this.currentUserKey, JSON.stringify(safeUser));
     this.currentUserSubject.next(safeUser);
   }
+
+  /////// PROFILE ///////
+
+  updateUser(updatedUser: User): void {
+    // 1. Mise à jour du localStorage "DB"
+    const users = this.getUsersFromStorage();
+    const index = users.findIndex(u => u.id === updatedUser.id);
+    if (index !== -1) {
+      users[index] = updatedUser;
+      localStorage.setItem(this.usersKey, JSON.stringify(users));
+    }
+
+    // 2. Mise à jour de la session courante
+    this.setCurrentUser(updatedUser);
+  }
 }
