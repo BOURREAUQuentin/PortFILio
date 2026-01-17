@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../core/models/user.model';
 
-export type HeaderVariant = 'default' | 'auth' | 'detail';
+export type HeaderVariant = 'default' | 'auth';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +15,10 @@ export type HeaderVariant = 'default' | 'auth' | 'detail';
 })
 export class HeaderComponent {
   @Input() variant: HeaderVariant = 'default';
-  @Input() projectTitle: string = '';
+
+  // NOUVEAU : Gestion du retour arrière
+  @Input() showBack: boolean = false;
+  @Input() backTitle: string = 'Retour'; // Texte par défaut
 
   private authService = inject(AuthService);
   private router = inject(Router);

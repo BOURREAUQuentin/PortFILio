@@ -8,6 +8,7 @@ import { RegisterComponent } from './pages/auth/register/register.component';
 import {FavoritesComponent} from './pages/favorites/favorites.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {EditProfileComponent} from './pages/profile/edit-profile.component';
+import {ProjectDetailComponent} from './pages/project-detail/project-detail.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'favorites', component: FavoritesComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'edit-profile', component: EditProfileComponent },
+  { path: 'project/:id', component: ProjectDetailComponent },
 
   { path: 'about', component: AboutComponent },
   { path: 'legal', component: LegalComponent },

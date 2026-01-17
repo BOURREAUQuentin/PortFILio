@@ -1,0 +1,43 @@
+@import '../../../../styles/variables'; // Si besoin variables
+
+.collapsible-container {
+  margin-bottom: 1.5rem;
+  border-radius: 20px;
+  overflow: hidden;
+
+  .collapsible-header {
+    width: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: #2D0C13; // Prune foncé
+    color: white;
+    padding: 1.2rem 2rem;
+    border: none; cursor: pointer;
+    text-align: left;
+    border-radius: 20px;
+    transition: border-radius 0.3s; // Transition douce coins bas
+
+    .title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1rem; }
+    .chevron { transition: transform 0.3s ease; }
+  }
+
+  .collapsible-content {
+    background-color: #FFF5F0; // Beige clair
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.15s ease-in-out;
+
+    .inner-content { padding: 2rem; color: #2D0C13; line-height: 1.6; }
+  }
+
+  // ÉTAT OUVERT
+  &.is-open {
+    .collapsible-header {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      .chevron { transform: rotate(180deg); }
+    }
+    .collapsible-content {
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+  }
+}

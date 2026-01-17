@@ -1,0 +1,11 @@
+<div class="collapsible-container" [class.is-open]="isOpen">
+  <button class="collapsible-header" (click)="toggle()">
+    <span class="title">{{ title }}</span>
+    <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </button>
+
+  <div class="collapsible-content" [style.max-height]="isOpen ? '1000px' : '0'">
+    <div class="inner-content">
+      <ng-content></ng-content> </div>
+  </div>
+</div>

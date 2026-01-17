@@ -4,18 +4,35 @@
     "title": "PortFIL'io V1",
     "description": "Première itération du portfolio étudiant. Développement d'une interface responsive et gestion des profils utilisateurs.",
     "imageUrl": "https://picsum.photos/seed/proj1/800/600",
+    "additionalImages": [
+      "https://picsum.photos/seed/proj1_extra1/800/600",
+      "https://picsum.photos/seed/proj1_extra2/800/600"
+    ],
+    "origin": "Projet de fin de semestre pour le cours de Développement Web Avancé.",
+    "skillsLearned": "Maîtrise du cycle de vie des composants Angular et gestion du State via RxJS.",
     "authors": [
       { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["Angular", "Figma", "Frontend"],
     "promo": "A1",
-    "isFavorite": true
+    "isFavorite": true,
+    "links": {
+      "github": "https://github.com/jules-autret/portfilio"
+    }
   },
   {
     "id": 2,
     "title": "Application Covoit'FIL",
     "description": "Solution de covoiturage interne pour les étudiants. Algorithme de matching et calcul d'itinéraires via API Google Maps.",
     "imageUrl": "https://picsum.photos/seed/proj2/800/600",
+    "additionalImages": [
+      "https://picsum.photos/seed/cov1/800/600",
+      "https://picsum.photos/seed/cov2/800/600",
+      "https://picsum.photos/seed/cov3/800/600",
+      "https://picsum.photos/seed/cov4/800/600"
+    ],
+    "origin": "Ce projet est né du constat que 60% des étudiants viennent en voiture seuls, alors que le parking est saturé. Nous avons voulu créer une solution communautaire et écologique.",
+    "skillsLearned": "Nous avons appris à travailler en méthode Agile (Scrum). Techniquement, l'intégration de l'API Google Maps et la gestion des notifications push sur mobile (Flutter) étaient les plus gros défis.",
     "authors": [
       { "id": 1, "name": "Quentin Bourreau" },
       { "id": 3, "name": "Aloïs Fleury" },
@@ -23,25 +40,38 @@
     ],
     "tags": ["Flutter", "Firebase", "Mobile"],
     "promo": "A1",
-    "isFavorite": false
+    "isFavorite": false,
+    "links": {
+      "github": "https://github.com/team-fil/covoit-app",
+      "slides": "https://docs.google.com/presentation/d/123456"
+    }
   },
   {
     "id": 3,
     "title": "Analyseur de trames réseau",
     "description": "Outil en ligne de commande pour intercepter et analyser les paquets TCP/IP en temps réel.",
     "imageUrl": "https://picsum.photos/seed/proj3/800/600",
+    "origin": "Projet personnel réalisé pour approfondir les concepts vus en cours de Réseaux.",
     "authors": [
       { "id": 3, "name": "Aloïs Fleury" }
     ],
     "tags": ["C++", "Réseau", "Linux"],
     "promo": "A2",
-    "isFavorite": false
+    "isFavorite": false,
+    "links": {
+      "github": "https://github.com/alois/packet-sniffer"
+    }
   },
   {
     "id": 4,
     "title": "Dashboard IOT SmartHome",
     "description": "Interface de visualisation des données capteurs (température, humidité) avec graphiques temps réel.",
     "imageUrl": "https://picsum.photos/seed/proj4/800/600",
+    "additionalImages": [
+      "https://picsum.photos/seed/iot1/800/600",
+      "https://picsum.photos/seed/iot2/800/600",
+      "https://picsum.photos/seed/iot3/800/600"
+    ],
     "authors": [
       { "id": 4, "name": "Sarah Connor" },
       { "id": 5, "name": "John Doe" }
@@ -60,13 +90,20 @@
     ],
     "tags": ["Java", "GameDev", "OOP"],
     "promo": "A1",
-    "isFavorite": false
+    "isFavorite": false,
+    "links": {
+      "github": "https://github.com/quentin/space-invaders-java"
+    }
   },
   {
     "id": 6,
     "title": "Classification d'images IA",
     "description": "Entraînement d'un modèle CNN pour reconnaître les différentes espèces de chats et chiens.",
     "imageUrl": "https://picsum.photos/seed/proj6/800/600",
+    "additionalImages": [
+      "https://picsum.photos/seed/ai_extra/800/600"
+    ],
+    "skillsLearned": "Compréhension des réseaux de neurones convolutifs et optimisation des hyperparamètres.",
     "authors": [
       { "id": 6, "name": "Alice Martin" },
       { "id": 7, "name": "Bob Dupuis" },
@@ -106,13 +143,17 @@
     "title": "Algorithme de Pathfinding",
     "description": "Comparaison visuelle des algorithmes A*, Dijkstra et BFS sur une grille interactive.",
     "imageUrl": "https://picsum.photos/seed/proj9/800/600",
+    "origin": "Challenge de code organisé par l'association informatique.",
     "authors": [
       { "id": 1, "name": "Quentin Bourreau" },
       { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["JavaScript", "Algo", "Web"],
     "promo": "A1",
-    "isFavorite": true
+    "isFavorite": true,
+    "links": {
+      "github": "https://github.com/pathfinding-viz"
+    }
   },
   {
     "id": 10,
@@ -144,6 +185,7 @@
     "title": "Dockerisation Infrastructure",
     "description": "Mise en place de conteneurs Docker pour l'environnement de développement de la promo.",
     "imageUrl": "https://picsum.photos/seed/proj12/800/600",
+    "skillsLearned": "DevOps, CI/CD et orchestration de conteneurs.",
     "authors": [
       { "id": 13, "name": "Sophie Fonfec" }
     ],
@@ -206,6 +248,13 @@
     "title": "Portfolio Architecte",
     "description": "Site minimaliste pour un ami architecte, focus sur les grandes images et la typographie.",
     "imageUrl": "https://picsum.photos/seed/proj17/800/600",
+    "additionalImages": [
+      "https://picsum.photos/seed/arch1/800/600",
+      "https://picsum.photos/seed/arch2/800/600",
+      "https://picsum.photos/seed/arch3/800/600",
+      "https://picsum.photos/seed/arch4/800/600",
+      "https://picsum.photos/seed/arch5/800/600"
+    ],
     "authors": [
       { "id": 1, "name": "Quentin Bourreau" }
     ],

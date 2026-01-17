@@ -10,14 +10,19 @@
     </a>
   </div>
 
-  @if (variant === 'detail') {
-    <div class="header-center">
-      <button class="back-btn" (click)="goBack()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  <div class="left-section">
+    @if (showBack) {
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        <span class="back-text">{{ backTitle }}</span>
       </button>
-      <h1 class="project-title">{{ projectTitle }}</h1>
-    </div>
-  }
+    } @else {
+      <a routerLink="/" class="logo">
+        <svg viewBox="0 0 100 100" class="logo-svg">
+          <path d="M10 10 H90 V90 H10 Z" fill="#E8501D" /> </svg>
+      </a>
+    }
+  </div>
 
   @if (variant !== 'auth') {
     <nav class="header-right">

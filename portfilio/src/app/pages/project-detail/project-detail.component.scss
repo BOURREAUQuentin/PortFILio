@@ -1,0 +1,144 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  background-color: $color-bg-bottom;
+  min-height: 100vh;
+}
+
+.project-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: calc(#{$header-height} + 2rem) 2rem 4rem;
+}
+
+// --- IMAGES GRID ---
+.images-grid-container {
+  display: flex; gap: 1.5rem;
+  height: 400px; // Hauteur fixe pour la grille
+  margin-bottom: 1.5rem;
+
+  // Image principale (50% ou 100% si seule)
+  .main-image-wrapper {
+    flex: 1;
+    border-radius: 20px; overflow: hidden;
+    .img-cover { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  // Grille secondaire (50%)
+  .secondary-images-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+
+    .sub-image-wrapper {
+      border-radius: 16px; overflow: hidden;
+      .img-cover { width: 100%; height: 100%; object-fit: cover; }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column; height: auto;
+    .main-image-wrapper { height: 250px; }
+    .secondary-images-grid { height: 250px; }
+  }
+}
+
+// --- HEADER SECTION (Titre, Auteurs, Actions) ---
+.header-section {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 2rem;
+
+  .title-block {
+    h1 {
+      font-size: 2.5rem; font-weight: 800; color: #2D0C13;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .authors-list {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+
+      .author-item {
+        display: flex; align-items: center; gap: 0.5rem;
+        padding: 6px 12px 6px 6px;
+        border-radius: 30px;
+        transition: all 0.2s;
+
+        // HOVER FRAME REQUESTED
+        &.clickable:hover {
+          background-color: #FFDdd0; // Beige/Orange clair bien visible
+          transform: translateY(-2px); // Petit effet de levée
+
+          .author-name { color: $color-orange; } // Le texte passe en orange
+          cursor: pointer;
+        }
+
+        .author-name { font-weight: 600; color: #2D0C13; }
+      }
+    }
+  }
+
+  // Actions (Coeur + Kebab)
+  .actions-block {
+    display: flex; gap: 0.5rem; align-items: center;
+
+    .action-btn {
+      background: none; border: none; cursor: pointer;
+      color: #aaa; transition: color 0.2s;
+      padding: 5px;
+      svg { width: 32px; height: 32px; }
+
+      &:hover { color: $color-orange; }
+      &.fav.active { color: $color-orange; svg { fill: $color-orange; } }
+    }
+
+    // Dropdown styles (Copie de project-card)
+    .menu-wrapper {
+      position: relative;
+      .menu-overlay { position: fixed; inset: 0; z-index: 90; }
+      .action-dropdown {
+        position: absolute; top: 100%; right: 0;
+        background: white; border-radius: 12px;
+        padding: 5px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        z-index: 100; min-width: 150px;
+
+        .dropdown-item {
+          display: flex; align-items: center; gap: 10px; width: 100%;
+          padding: 10px; border: none; background: none; cursor: pointer;
+          &:hover { background: #f5f5f5; }
+          &.delete { color: #C0392B; svg { stroke: #C0392B; } }
+        }
+        .divider { height: 1px; background: #eee; margin: 2px 0; }
+      }
+    }
+  }
+}
+
+// --- CONTENU INFOS ---
+.infos-section {
+  display: flex; flex-direction: column; gap: 0.5rem; // Petit gap entre les accordéons
+
+  // Style interne du contenu
+  .tags-group {
+    margin-top: 1.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+
+    .tags-list {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      .tag-pill {
+        background-color: $color-orange;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem; font-weight: 700;
+      }
+    }
+  }
+
+  .links-group {
+    margin-top: 1rem;
+    .link-text { color: #2D0C13; text-decoration: underline; font-weight: 600; }
+  }
+}

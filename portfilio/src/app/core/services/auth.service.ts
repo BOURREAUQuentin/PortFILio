@@ -26,6 +26,10 @@ export class AuthService {
     this.restoreSession();
   }
 
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
   // 1. Initialisation : Si c'est la 1ère fois qu'on vient sur le site, on charge le JSON dans le LocalStorage
   private initUsers(): void {
     const storedUsers = localStorage.getItem(this.usersKey);
@@ -134,8 +138,5 @@ export class AuthService {
       // 6. Mise à jour de la session active (Observable)
       this.setCurrentUser(finalUser);
     }
-
-    // 2. Mise à jour de la session courante
-    this.setCurrentUser(updatedUser);
   }
 }
