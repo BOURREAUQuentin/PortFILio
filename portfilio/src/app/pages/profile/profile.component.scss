@@ -69,7 +69,7 @@
 // CONTENU (DROITE)
 .profile-content {
   .content-header { text-align: center; margin-bottom: 1.5rem; h2 { font-size: 1.8rem; color: $color-dark; font-weight: 800; } }
-  .create-card-placeholder { width: 100%; padding: 1rem; border: 2px dashed rgba($color-dark, 0.4); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: $color-dark; font-weight: 700; margin-bottom: 2rem; }
+  .create-card-placeholder { cursor: pointer; width: 100%; padding: 1rem; border: 2px dashed rgba($color-dark, 0.4); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: $color-dark; font-weight: 700; margin-bottom: 2rem; }
 
   .projects-grid {
     display: grid;

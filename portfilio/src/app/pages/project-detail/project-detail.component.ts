@@ -73,7 +73,7 @@ export class ProjectDetailComponent implements OnInit {
   onEdit(): void {
     this.isMenuOpen = false;
     console.log('Edit project', this.project?.id);
-    // this.router.navigate(['/edit-project', this.project?.id]);
+    this.router.navigate(['/edit-project', this.project?.id]);
   }
 
   onDeleteRequest(): void {

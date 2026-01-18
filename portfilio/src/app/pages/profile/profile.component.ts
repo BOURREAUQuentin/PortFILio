@@ -134,7 +134,7 @@ export class ProfileComponent implements OnInit {
 
   onEditProject(projectId: number): void {
     if (this.isOwnProfile) {
-      console.log("Modifier projet", projectId);
+      this.router.navigate(['/edit-project', projectId]);
     }
   }
 

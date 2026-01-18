@@ -9,6 +9,7 @@ import {FavoritesComponent} from './pages/favorites/favorites.component';
 import {ProfileComponent} from './pages/profile/profile.component';
 import {EditProfileComponent} from './pages/profile/edit-profile.component';
 import {ProjectDetailComponent} from './pages/project-detail/project-detail.component';
+import {ProjectFormComponent} from './pages/project-form/project-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -22,7 +23,10 @@ export const routes: Routes = [
   // Route pour voir le profil d'un autre (ou le sien via ID)
   { path: 'profile/:id', component: ProfileComponent },
   { path: 'edit-profile', component: EditProfileComponent },
+
   { path: 'project/:id', component: ProjectDetailComponent },
+  { path: 'create-project', component: ProjectFormComponent },
+  { path: 'edit-project/:id', component: ProjectFormComponent },
 
   { path: 'about', component: AboutComponent },
   { path: 'legal', component: LegalComponent },

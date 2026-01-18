@@ -116,4 +116,37 @@ export class ProjectService {
   private saveToStorage(projects: Project[]): void {
     localStorage.setItem('portfilio_projects', JSON.stringify(projects));
   }
+
+  // Récupérer tous les tags uniques existants
+  getAllTags(): string[] {
+    const projects = this.projectsSubject.value;
+    const allTags = projects.flatMap(p => p.tags);
+    return [...new Set(allTags)].sort();
+  }
+
+  // Récupérer tous les modules uniques
+  getAllModules(): string[] {
+    const projects = this.projectsSubject.value;
+    const allModules = projects.flatMap(p => p.modules || []);
+    return [...new Set(allModules)].sort();
+  }
+
+  // Créer ou Mettre à jour
+  saveProject(project: Project): void {
+    const projects = this.projectsSubject.value;
+    const index = projects.findIndex(p => p.id === project.id);
+
+    if (index > -1) {
+      // EDIT
+      projects[index] = project;
+    } else {
+      // CREATE (Générer ID simple)
+      const newId = Math.max(...projects.map(p => p.id), 0) + 1;
+      project.id = newId;
+      projects.push(project);
+    }
+
+    this.projectsSubject.next(projects);
+    this.saveToStorage(projects);
+  }
 }
