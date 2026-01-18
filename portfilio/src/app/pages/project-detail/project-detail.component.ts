@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
@@ -20,7 +20,8 @@ import { AuthService } from '../../core/services/auth.service';
     FooterComponent,
     AvatarComponent,
     CollapsibleSectionComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    RouterLink
   ],
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss']

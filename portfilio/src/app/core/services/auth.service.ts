@@ -57,6 +57,12 @@ export class AuthService {
     return usersStr ? JSON.parse(usersStr) : [];
   }
 
+  // Récupérer n'importe quel utilisateur par son ID (depuis le localStorage)
+  getUserById(id: number): User | undefined {
+    const users = this.getUsersFromStorage();
+    return users.find(u => u.id === id);
+  }
+
   // --- ACTIONS ---
 
   // NOUVELLE MÉTHODE : Gère les favoris de l'utilisateur connecté

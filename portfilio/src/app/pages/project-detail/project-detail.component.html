@@ -34,7 +34,7 @@
         <h1>{{ project.title }}</h1>
         <div class="authors-list">
           @for (author of project.authors; track author.id) {
-            <div class="author-item clickable">
+            <div [routerLink]="['/profile', author.id]" class="author-item clickable">
               <app-avatar [imageUrl]="author.avatarUrl" [name]="author.name" size="small"></app-avatar>
               <span class="author-name">{{ author.name }}</span>
             </div>

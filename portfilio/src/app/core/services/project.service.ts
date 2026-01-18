@@ -50,7 +50,7 @@ export class ProjectService {
       map(([projects, currentUser]) => {
 
         // Récupérer tous les users pour l'hydratation des avatars auteurs (comme avant)
-        const allUsersRaw = localStorage.getItem('users');
+        const allUsersRaw = localStorage.getItem('portfilio_users');
         const allUsers: User[] = allUsersRaw ? JSON.parse(allUsersRaw) : [];
 
         return projects.map(project => {

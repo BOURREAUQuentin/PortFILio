@@ -17,7 +17,10 @@ export const routes: Routes = [
 
   { path: 'home', component: HomeComponent },
   { path: 'favorites', component: FavoritesComponent },
+  // Route pour voir son propre profil (redirection ou gestion auto)
   { path: 'profile', component: ProfileComponent },
+  // Route pour voir le profil d'un autre (ou le sien via ID)
+  { path: 'profile/:id', component: ProfileComponent },
   { path: 'edit-profile', component: EditProfileComponent },
   { path: 'project/:id', component: ProjectDetailComponent },
 
