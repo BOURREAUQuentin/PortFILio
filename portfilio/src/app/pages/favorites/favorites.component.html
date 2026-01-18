@@ -17,8 +17,9 @@
   <div class="sticky-search-wrapper">
     <app-search-bar
       placeholder="Chercher dans mes favoris..."
-      (search)="onSearch($event)"
-      (sortChange)="onSort($event)">
+      (searchChange)="onSearch($event)"
+      (sortChange)="onSort($event)"
+      (filterChange)="onFilter($event)">
     </app-search-bar>
   </div>
 
@@ -31,7 +32,7 @@
           (toggleFavorite)="initDelete($event)"> </app-project-card>
       } @empty {
         <div class="no-results">
-          <p>Vous n'avez aucun projet favori pour le moment.</p>
+          <p>Vous n'avez aucun projet favori pour le moment suivant la recherche en code.</p>
           <p class="sub-text">Explorez l'accueil pour en ajouter !</p>
 
           <a routerLink="/home" class="btn-home">

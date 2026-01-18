@@ -9,6 +9,19 @@ export interface ProjectLink {
   url: string;
 }
 
+// Structure pour l'état des filtres
+export interface ProjectFilters {
+  tags: string[];     // ex: ['Docker', 'Python']
+  modules: string[];  // ex: ['IHM']
+  promos: string[];   // ex: ['A1', 'A3']
+  // On garde en mémoire si la section entière est active ou non
+  sectionsActive: {
+    tags: boolean;
+    modules: boolean;
+    promos: boolean;
+  };
+}
+
 export interface Project {
   id: number;
   title: string;

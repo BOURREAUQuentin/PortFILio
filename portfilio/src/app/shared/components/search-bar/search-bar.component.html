@@ -1,65 +1,126 @@
-<div class="search-wrapper">
+<div class="search-bar-container">
 
-  @if (isSortMenuOpen) {
-    <div class="click-overlay" (click)="closeMenu()"></div>
-  }
+  <div class="input-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
 
-  <div class="search-input-container">
     <input
       type="text"
-      class="search-input"
-      [placeholder]="placeholder"
-      [(ngModel)]="searchTerm"
-      (input)="onSearchChange()"
+      [value]="searchQuery"
+      (input)="onSearch($event)"
+      placeholder="Rechercher un projet..."
     />
 
-    @if (searchTerm) {
-      <button class="reset-btn" (click)="resetSearch()" aria-label="Effacer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    @if (searchQuery) {
+      <button class="btn-clear" (click)="clearSearch()" title="Effacer la recherche">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     }
-
-    <button class="search-submit-btn" aria-label="Rechercher">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-    </button>
   </div>
 
-  <div class="search-actions">
-    <div class="sort-container">
-      <button
-        class="action-btn sort-btn"
-        [class.active]="isSortMenuOpen || activeSort !== 'recent'"
-        (click)="toggleSortMenu()"
-        aria-label="Trier">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
-          <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
-          <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line>
-          <line x1="17" y1="16" x2="23" y2="16"></line>
-        </svg>
-        @if (activeSort !== 'recent') {
-          <span class="sort-badge">1</span>
-        }
+  <div class="actions-group">
+
+    <div class="dropdown-wrapper">
+      <button class="btn-sort" (click)="toggleSortMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+        {{ currentSortLabel }}
       </button>
 
       @if (isSortMenuOpen) {
         <div class="sort-dropdown">
-          <button (click)="selectSort('recent')" [class.selected]="activeSort === 'recent'">Plus récents</button>
-          <button (click)="selectSort('oldest')" [class.selected]="activeSort === 'oldest'">Plus anciens</button>
-          <button (click)="selectSort('alpha')" [class.selected]="activeSort === 'alpha'">Alphabétique (A-Z)</button>
-          <button (click)="selectSort('alpha-reverse')" [class.selected]="activeSort === 'alpha-reverse'">Alphabétique (Z-A)</button>
+          <button (click)="selectSort('default', 'Tri par défaut')">Tri par défaut</button>
+          <button (click)="selectSort('recent', 'Plus récents')">Plus récents</button>
+          <button (click)="selectSort('az', 'Alphabétique (A-Z)')">Alphabétique (A-Z)</button>
+          <button (click)="selectSort('za', 'Alphabétique (Z-A)')">Alphabétique (Z-A)</button>
         </div>
       }
     </div>
 
-    <button class="action-btn filter-btn" (click)="onFilterClick()" aria-label="Filtrer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-        <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
-      </svg>
-    </button>
+    <div class="dropdown-wrapper">
+      <button class="btn-filter" [class.active]="isFilterMenuOpen || activeFilterCount > 0" (click)="toggleFilterMenu()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+        Filtrer
+        @if (activeFilterCount > 0) {
+          <span class="badge">{{ activeFilterCount }}</span>
+        }
+      </button>
+
+      @if (isFilterMenuOpen) {
+        <div class="filter-dropdown">
+
+          <div class="filter-header">
+            <h3>Filtres</h3>
+            <button class="btn-reset" (click)="resetFilters()">Tout effacer</button>
+          </div>
+
+          <div class="filter-scroll-content">
+
+            <div class="filter-section" [class.disabled]="!filters.sectionsActive.tags">
+              <div class="section-header">
+                <span class="section-title">Langages & Tech</span>
+                <label class="switch">
+                  <input type="checkbox" [checked]="filters.sectionsActive.tags" (change)="toggleSection('tags')">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="chips-grid">
+                @for (tag of availableTags; track tag) {
+                  <label class="filter-chip">
+                    <input type="checkbox"
+                           [checked]="isItemChecked('tags', tag)"
+                           (change)="toggleFilterItem('tags', tag)"
+                           [disabled]="!filters.sectionsActive.tags">
+                    <span>{{ tag }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="filter-section" [class.disabled]="!filters.sectionsActive.modules">
+              <div class="section-header">
+                <span class="section-title">Modules</span>
+                <label class="switch">
+                  <input type="checkbox" [checked]="filters.sectionsActive.modules" (change)="toggleSection('modules')">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="chips-grid">
+                @for (mod of availableModules; track mod) {
+                  <label class="filter-chip">
+                    <input type="checkbox"
+                           [checked]="isItemChecked('modules', mod)"
+                           (change)="toggleFilterItem('modules', mod)"
+                           [disabled]="!filters.sectionsActive.modules">
+                    <span>{{ mod }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+
+            <div class="filter-section" [class.disabled]="!filters.sectionsActive.promos">
+              <div class="section-header">
+                <span class="section-title">Promotion</span>
+                <label class="switch">
+                  <input type="checkbox" [checked]="filters.sectionsActive.promos" (change)="toggleSection('promos')">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="chips-grid">
+                @for (promo of availablePromos; track promo) {
+                  <label class="filter-chip">
+                    <input type="checkbox"
+                           [checked]="isItemChecked('promos', promo)"
+                           (change)="toggleFilterItem('promos', promo)"
+                           [disabled]="!filters.sectionsActive.promos">
+                    <span>{{ promo }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+
+          </div>
+        </div>
+      }
+    </div>
+
   </div>
 </div>

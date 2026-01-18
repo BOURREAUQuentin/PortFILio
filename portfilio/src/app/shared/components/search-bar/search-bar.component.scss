@@ -1,106 +1,242 @@
 @import '../../../../styles/variables';
 
-.click-overlay {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99; cursor: default;
+:host {
+  display: block;
+  width: 100%;
 }
 
-.search-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  width: 100%;
-  max-width: 800px;
+.search-bar-container {
+  max-width: 1100px;
   margin: 0 auto;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 
-  // INPUT CONTAINER
-  .search-input-container {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input-wrapper {
     flex: 1;
     position: relative;
-    display: flex;
-    align-items: center;
-    min-width: 0;
 
-    .search-input {
+    input {
       width: 100%;
-      height: 50px;
+      padding: 14px 45px 14px 50px;
+      border-radius: 50px;
+      border: 1px solid #E0E0E0;
+      background: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: #2D0C13;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+      transition: all 0.3s ease;
 
-      // MODIFICATION : Plus d'espace à droite (90px) pour loger le Reset + la Loupe
-      padding: 0 90px 0 25px;
+      &::placeholder { color: #aaa; }
 
-      border-radius: 50px; border: none; background-color: white;
-      font-family: 'Inter', sans-serif; font-size: 1rem; color: $color-dark; outline: none;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); transition: box-shadow 0.2s;
-      &::placeholder { color: lighten($color-dark, 20%); }
-      &:focus { box-shadow: 0 4px 20px rgba($color-orange, 0.15); }
+      &:focus {
+        outline: none;
+        border-color: $color-orange;
+        box-shadow: 0 4px 15px rgba($color-orange, 0.15);
+      }
     }
 
-    // NOUVEAU : Style du bouton Reset (la croix)
-    .reset-btn {
+    .search-icon {
       position: absolute;
-      right: 50px; // Placé juste à gauche du bouton Loupe
+      left: 20px;
       top: 50%;
       transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      color: #aaa;
+      pointer-events: none;
+    }
 
-      background: none;
-      border: none;
+    .btn-clear {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
       color: #999;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4px;
       border-radius: 50%;
       transition: all 0.2s;
 
       &:hover {
         background-color: #f0f0f0;
-        color: $color-dark;
+        color: #2D0C13;
       }
-    }
-
-    .search-submit-btn {
-      position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
-      width: 40px; height: 40px; border-radius: 50%; background-color: $color-dark;
-      border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white;
-      svg { width: 20px; height: 20px; }
     }
   }
 
-  // ACTIONS (Inchangé)
-  .search-actions {
-    display: flex; gap: 1rem; position: relative; flex-shrink: 0;
-    .sort-container { position: relative; }
+  .actions-group {
+    display: flex;
+    gap: 1rem;
+    @media (max-width: 768px) {
+      justify-content: space-between;
+    }
+  }
+}
 
-    .action-btn {
-      background: none; border: none; cursor: pointer; color: $color-dark; padding: 0;
-      width: 44px; height: 44px; border-radius: 8px; transition: all 0.2s;
-      display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;
+// --- BOUTONS ---
+.dropdown-wrapper {
+  position: relative;
 
-      svg { width: 28px; height: 28px; }
+  button.btn-filter, button.btn-sort {
+    display: flex; align-items: center; gap: 8px;
+    height: 50px;
+    padding: 0 24px;
+    border-radius: 50px;
+    border: 1px solid #E0E0E0;
+    background: white;
+    color: #2D0C13;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    transition: all 0.2s;
 
-      &:hover, &.active { background-color: rgba($color-dark, 0.05); color: $color-orange; }
+    svg { width: 18px; height: 18px; }
 
-      .sort-badge {
-        position: absolute; top: -2px; right: -2px; background-color: $color-orange; color: white;
-        font-size: 0.7rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        border: 2px solid $color-bg-hero; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      }
+    &:hover {
+      border-color: #ccc;
+      background: #fafafa;
+      transform: translateY(-1px);
     }
 
-    .sort-dropdown {
-      position: absolute; top: 120%; right: 0; width: 200px;
-      background-color: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      padding: 0.5rem; z-index: 100; display: flex; flex-direction: column; gap: 2px;
+    &.active {
+      background-color: #2D0C13;
+      color: white;
+      border-color: #2D0C13;
+      .badge { background: $color-orange; color: white; }
+    }
+  }
 
-      button {
-        background: none; border: none; text-align: left; padding: 10px 15px;
-        font-family: 'Inter', sans-serif; font-size: 0.95rem; color: $color-dark;
-        border-radius: 8px; cursor: pointer; transition: background 0.2s;
-        &:hover { background-color: rgba($color-orange, 0.08); color: $color-orange; }
-        &.selected { font-weight: bold; color: $color-orange; background-color: rgba($color-orange, 0.1); }
+  .badge {
+    background: $color-orange; color: white;
+    font-size: 0.75rem; padding: 2px 6px; border-radius: 10px;
+    min-width: 20px; text-align: center;
+    margin-left: 4px;
+  }
+}
+
+// --- DROPDOWNS ---
+.filter-dropdown, .sort-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  z-index: 100;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// --- FILTRE SPECIFIQUE ---
+.filter-dropdown {
+  width: 340px;
+  display: flex; flex-direction: column;
+
+  .filter-header {
+    padding: 1.2rem;
+    border-bottom: 1px solid #f5f5f5;
+    display: flex; justify-content: space-between; align-items: center;
+
+    h3 { margin: 0; font-size: 1.1rem; color: #2D0C13; font-weight: 800; }
+    .btn-reset {
+      background: none; border: none; color: #999;
+      font-size: 0.85rem; cursor: pointer; text-decoration: underline;
+      &:hover { color: $color-orange; }
+    }
+  }
+
+  .filter-scroll-content {
+    max-height: 400px; overflow-y: auto;
+    padding: 1.2rem;
+  }
+
+  .filter-section {
+    margin-bottom: 1.8rem;
+    transition: opacity 0.3s;
+
+    &:last-child { margin-bottom: 0; }
+
+    &.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      .section-header { pointer-events: auto; }
+    }
+
+    .section-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1rem;
+      .section-title { font-weight: 700; font-size: 0.9rem; color: #2D0C13; text-transform: uppercase; letter-spacing: 0.5px; }
+    }
+
+    .chips-grid {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+
+      .filter-chip {
+        cursor: pointer; position: relative;
+        input { display: none; }
+
+        span {
+          display: block;
+          padding: 8px 14px;
+          border-radius: 12px;
+          background: #f4f4f4;
+          color: #666; font-size: 0.85rem; font-weight: 600;
+          transition: all 0.2s;
+          border: 1px solid transparent;
+        }
+
+        input:checked + span {
+          background: #FFEEE6;
+          color: $color-orange;
+          border-color: rgba($color-orange, 0.2);
+        }
+
+        &:hover span { background: #eee; }
       }
     }
+  }
+}
+
+// --- SWITCH ---
+.switch {
+  position: relative; display: inline-block; width: 40px; height: 22px;
+  input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ddd; transition: .3s; border-radius: 22px;
+    &:before {
+      position: absolute; content: ""; height: 18px; width: 18px;
+      left: 2px; bottom: 2px; background-color: white;
+      transition: .3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+  }
+  input:checked + .slider { background-color: $color-orange; }
+  input:checked + .slider:before { transform: translateX(18px); }
+}
+
+// --- TRI SPECIFIQUE ---
+.sort-dropdown {
+  min-width: 200px; padding: 0.5rem 0;
+  button {
+    display: block; width: 100%; text-align: left; padding: 12px 20px;
+    background: none; border: none; cursor: pointer; color: #555; font-weight: 500; font-size: 0.95rem;
+    &:hover { background: #f9f9f9; color: $color-orange; }
   }
 }

@@ -39,7 +39,7 @@
 
   <div class="sticky-search-wrapper" id="projects-anchor">
     <div class="search-container">
-      <app-search-bar (search)="onSearch($event)" (sortChange)="onSort($event)"></app-search-bar>
+      <app-search-bar (searchChange)="onSearch($event)" (sortChange)="onSort($event)" (filterChange)="onFilter($event)"></app-search-bar>
     </div>
   </div>
 
