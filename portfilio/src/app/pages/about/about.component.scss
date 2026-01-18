@@ -7,8 +7,7 @@
 }
 
 .page-content {
-  padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding: calc(3rem + #{$header-height}) 1rem 10rem;
 
   .container {
     @include page-container; // Utilise le mixin défini plus haut

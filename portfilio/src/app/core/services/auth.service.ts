@@ -59,6 +59,31 @@ export class AuthService {
 
   // --- ACTIONS ---
 
+  // NOUVELLE MÉTHODE : Gère les favoris de l'utilisateur connecté
+  toggleProjectFavorite(projectId: number): void {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) return;
+
+    // 1. On récupère la liste actuelle (ou vide si inexistante)
+    let userFavorites = currentUser.favorites || [];
+
+    // 2. On Ajoute ou on Retire
+    if (userFavorites.includes(projectId)) {
+      userFavorites = userFavorites.filter(id => id !== projectId);
+    } else {
+      userFavorites.push(projectId);
+    }
+
+    // 3. On crée un user mis à jour
+    const updatedUser: User = {
+      ...currentUser,
+      favorites: userFavorites
+    };
+
+    // 4. On sauvegarde (via la méthode updateUser qu'on a déjà corrigée)
+    this.updateUser(updatedUser);
+  }
+
   login(email: string, pass: string): boolean {
     const users = this.getUsersFromStorage();
     // On cherche dans le localStorage (qui contient les users de base + les nouveaux)

@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs'; // Ajout combineLatest
 import { Project } from '../models/project.model';
 import { ToastService } from './toast.service';
 import { User } from '../models/user.model';
+import { AuthService } from './auth.service'; // Import Auth
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,9 @@ export class ProjectService {
 
   private http = inject(HttpClient);
   private toastService = inject(ToastService);
+  private authService = inject(AuthService); // Injection Auth
 
-  // BehaviorSubject contient les données "brutes" (telles que stockées en JSON/Storage)
+  // Source de données "brutes" des projets
   private projectsSubject = new BehaviorSubject<Project[]>([]);
 
   constructor() {
@@ -36,58 +38,70 @@ export class ProjectService {
   }
 
   /**
-   * C'EST ICI QUE LA MAGIE OPÈRE (HYDRATATION)
-   * On retourne un Observable qui modifie les données à la volée avant de les donner au composant.
+   * HYDRATATION INTELLIGENTE :
+   * Combine les Projets + L'User connecté.
+   * Si l'User change (ou like), cette liste se met à jour automatiquement partout.
    */
   getProjects(): Observable<Project[]> {
-    return this.projectsSubject.asObservable().pipe(
-      map(projects => {
-        // 1. On lit les users à jour (qui contiennent potentiellement la nouvelle photo Base64)
-        const usersRaw = localStorage.getItem('portfilio_users');
-        const users: User[] = usersRaw ? JSON.parse(usersRaw) : [];
+    return combineLatest([
+      this.projectsSubject,        // Flux des projets
+      this.authService.currentUser$ // Flux de l'utilisateur
+    ]).pipe(
+      map(([projects, currentUser]) => {
 
-        // 2. On parcourt les projets pour mettre à jour leurs auteurs
+        // Récupérer tous les users pour l'hydratation des avatars auteurs (comme avant)
+        const allUsersRaw = localStorage.getItem('users');
+        const allUsers: User[] = allUsersRaw ? JSON.parse(allUsersRaw) : [];
+
         return projects.map(project => {
-
+          // 1. Hydratation Auteurs (Avatar & Nom)
           const updatedAuthors = project.authors.map(author => {
-            // On cherche le User correspondant (avec conversion String/Number par sécurité)
-            const realUser = users.find(u => Number(u.id) === Number(author.id));
-
+            const realUser = allUsers.find(u => Number(u.id) === Number(author.id));
             if (realUser) {
-              // Si trouvé, on fusionne les infos :
-              // On garde l'ID de l'auteur, mais on prend le Nom et l'Avatar du User à jour
               return {
                 ...author,
                 name: `${realUser.firstName} ${realUser.lastName}`,
-                // Priorité à l'avatar du User (Base64), sinon celui de l'auteur (json), sinon undefined
                 avatarUrl: realUser.avatarUrl || author.avatarUrl
               };
             }
             return author;
           });
 
-          // On retourne une COPIE du projet avec les auteurs mis à jour
-          return { ...project, authors: updatedAuthors };
+          // 2. Hydratation FAVORIS (C'est ici que ça se joue !)
+          // Le projet est favori SI son ID est dans la liste 'favorites' de l'utilisateur courant
+          const isFav = currentUser?.favorites?.includes(project.id) ?? false;
+
+          return {
+            ...project,
+            authors: updatedAuthors,
+            isFavorite: isFav // On écrase la valeur du JSON par la valeur réelle user
+          };
         });
       })
     );
   }
 
+  // Action de Like
   toggleFavorite(projectId: number): void {
-    const currentProjects = this.projectsSubject.value;
-    // On travaille sur une copie pour le changement d'état
-    const updatedProjects = currentProjects.map(p => {
-      if (p.id === projectId) {
-        const newState = !p.isFavorite;
-        const msg = newState ? 'Projet ajouté aux favoris' : 'Projet retiré des favoris';
-        this.toastService.show(msg, 'success');
-        return { ...p, isFavorite: newState };
-      }
-      return p;
-    });
+    const currentUser = this.authService.getCurrentUser();
 
-    this.projectsSubject.next(updatedProjects);
-    this.saveToStorage(updatedProjects);
+    if (!currentUser) {
+      this.toastService.show('Vous devez être connecté pour aimer un projet.', 'error');
+      return;
+    }
+
+    // 1. On demande à l'AuthService de mettre à jour le User
+    this.authService.toggleProjectFavorite(projectId);
+
+    // 2. On affiche le Toast
+    // On vérifie l'état APRES mise à jour pour le message
+    const isNowFavorite = this.authService.getCurrentUser()?.favorites?.includes(projectId);
+    const msg = isNowFavorite ? 'Projet ajouté aux favoris' : 'Projet retiré des favoris';
+    this.toastService.show(msg, 'success');
+
+    // Note : Pas besoin de toucher à projectsSubject ni saveToStorage('portfilio_projects').
+    // Le combineLatest dans getProjects détectera le changement de currentUser
+    // et mettra à jour la vue automatiquement.
   }
 
   deleteProject(id: number): void {
@@ -99,7 +113,6 @@ export class ProjectService {
     this.toastService.show('Projet supprimé avec succès.', 'success');
   }
 
-  // Sauvegarde les projets BRUTS (sans l'avatar Base64 du User pour ne pas surcharger le storage 'portfilio_projects')
   private saveToStorage(projects: Project[]): void {
     localStorage.setItem('portfilio_projects', JSON.stringify(projects));
   }

@@ -15,10 +15,10 @@
     ],
     "tags": ["Angular", "Figma", "Frontend"],
     "promo": "A1",
-    "isFavorite": true,
-    "links": {
-      "github": "https://github.com/jules-autret/portfilio"
-    }
+    "modules": ["Dév Web", "Design UI"],
+    "links": [
+      { "title": "GitHub", "url": "https://github.com/jules-autret/portfilio" }
+    ]
   },
   {
     "id": 2,
@@ -40,11 +40,12 @@
     ],
     "tags": ["Flutter", "Firebase", "Mobile"],
     "promo": "A1",
-    "isFavorite": false,
-    "links": {
-      "github": "https://github.com/team-fil/covoit-app",
-      "slides": "https://docs.google.com/presentation/d/123456"
-    }
+    "modules": ["IHM", "Gestion de projet", "Algorithmique"],
+    "links": [
+      { "title": "Repo GitHub", "url": "https://github.com/team-fil/covoit-app" },
+      { "title": "Présentation Slides", "url": "https://docs.google.com/presentation/d/123456" },
+      { "title": "Maquette Figma", "url": "https://figma.com/file/xyz" }
+    ]
   },
   {
     "id": 3,
@@ -57,10 +58,10 @@
     ],
     "tags": ["C++", "Réseau", "Linux"],
     "promo": "A2",
-    "isFavorite": false,
-    "links": {
-      "github": "https://github.com/alois/packet-sniffer"
-    }
+    "modules": ["Réseaux", "Système"],
+    "links": [
+      { "title": "Code Source", "url": "https://github.com/alois/packet-sniffer" }
+    ]
   },
   {
     "id": 4,
@@ -77,8 +78,7 @@
       { "id": 5, "name": "John Doe" }
     ],
     "tags": ["React", "D3.js", "IOT"],
-    "promo": "A1",
-    "isFavorite": true
+    "promo": "A1"
   },
   {
     "id": 5,
@@ -90,10 +90,9 @@
     ],
     "tags": ["Java", "GameDev", "OOP"],
     "promo": "A1",
-    "isFavorite": false,
-    "links": {
-      "github": "https://github.com/quentin/space-invaders-java"
-    }
+    "links": [
+      { "title": "GitHub", "url": "https://github.com/quentin/space-invaders-java" }
+    ]
   },
   {
     "id": 6,
@@ -111,8 +110,7 @@
       { "id": 9, "name": "David Leroi" }
     ],
     "tags": ["Python", "TensorFlow", "IA"],
-    "promo": "A3",
-    "isFavorite": true
+    "promo": "A3"
   },
   {
     "id": 7,
@@ -123,8 +121,7 @@
       { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["Wordpress", "PHP", "Web"],
-    "promo": "A1",
-    "isFavorite": false
+    "promo": "A1"
   },
   {
     "id": 8,
@@ -135,8 +132,7 @@
       { "id": 10, "name": "Thomas Anderson" }
     ],
     "tags": ["Rust", "CLI", "System"],
-    "promo": "A2",
-    "isFavorite": false
+    "promo": "A2"
   },
   {
     "id": 9,
@@ -150,10 +146,9 @@
     ],
     "tags": ["JavaScript", "Algo", "Web"],
     "promo": "A1",
-    "isFavorite": true,
-    "links": {
-      "github": "https://github.com/pathfinding-viz"
-    }
+    "links": [
+      { "title": "Demo Live", "url": "https://pathfinding.demo.com" }
+    ]
   },
   {
     "id": 10,
@@ -164,8 +159,7 @@
       { "id": 3, "name": "Aloïs Fleury" }
     ],
     "tags": ["Ocaml", "Compilation", "Théorie"],
-    "promo": "A2",
-    "isFavorite": false
+    "promo": "A2"
   },
   {
     "id": 11,
@@ -177,8 +171,7 @@
       { "id": 12, "name": "Groupe B" }
     ],
     "tags": ["Java", "Swing", "SQL"],
-    "promo": "A1",
-    "isFavorite": false
+    "promo": "A1"
   },
   {
     "id": 12,
@@ -190,8 +183,7 @@
       { "id": 13, "name": "Sophie Fonfec" }
     ],
     "tags": ["Docker", "DevOps", "Linux"],
-    "promo": "A3",
-    "isFavorite": true
+    "promo": "A3"
   },
   {
     "id": 13,
@@ -202,8 +194,7 @@
       { "id": 2, "name": "Jules Autret" }
     ],
     "tags": ["React", "CSS", "Frontend"],
-    "promo": "A1",
-    "isFavorite": false
+    "promo": "A1"
   },
   {
     "id": 14,
@@ -215,8 +206,7 @@
       { "id": 15, "name": "Team Web" }
     ],
     "tags": ["Python", "NLP", "API"],
-    "promo": "A3",
-    "isFavorite": false
+    "promo": "A3"
   },
   {
     "id": 15,
@@ -227,8 +217,7 @@
       { "id": 16, "name": "Mr Robot" }
     ],
     "tags": ["Security", "Kali", "Network"],
-    "promo": "A2",
-    "isFavorite": true
+    "promo": "A2"
   },
   {
     "id": 16,
@@ -240,8 +229,7 @@
       { "id": 18, "name": "Sound Guy" }
     ],
     "tags": ["Kotlin", "Android", "DSP"],
-    "promo": "A2",
-    "isFavorite": false
+    "promo": "A2"
   },
   {
     "id": 17,
@@ -259,8 +247,7 @@
       { "id": 1, "name": "Quentin Bourreau" }
     ],
     "tags": ["Vue.js", "Design", "Web"],
-    "promo": "A1",
-    "isFavorite": false
+    "promo": "A1"
   },
   {
     "id": 18,
@@ -271,8 +258,7 @@
       { "id": 3, "name": "Aloïs Fleury" }
     ],
     "tags": ["Python", "Scraping", "Discord"],
-    "promo": "A1",
-    "isFavorite": true
+    "promo": "A1"
   },
   {
     "id": 19,
@@ -284,8 +270,7 @@
       { "id": 20, "name": "Novice Dev" }
     ],
     "tags": ["Node.js", "Socket.io", "Web"],
-    "promo": "A3",
-    "isFavorite": false
+    "promo": "A3"
   },
   {
     "id": 20,
@@ -296,7 +281,6 @@
       { "id": 21, "name": "Satoshi N." }
     ],
     "tags": ["Solidity", "Blockchain", "Web3"],
-    "promo": "A3",
-    "isFavorite": true
+    "promo": "A3"
   }
 ]

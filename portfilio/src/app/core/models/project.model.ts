@@ -4,6 +4,11 @@ export interface Author {
   avatarUrl?: string;
 }
 
+export interface ProjectLink {
+  title: string;
+  url: string;
+}
+
 export interface Project {
   id: number;
   title: string;
@@ -13,11 +18,9 @@ export interface Project {
   origin?: string; // "Origine du projet"
   skillsLearned?: string; // "Ce qu'ils ont appris"
   authors: Author[]; // Tableau d'auteurs avec ID
-  isFavorite: boolean;
+  isFavorite: boolean; // Chargé à la volée suivant l'utilisateur connecté (la donnée est dynamique)
   tags: string[];
   promo: string;
-  links?: {
-    github?: string;
-    slides?: string;
-  };
+  modules?: string[]; // NOUVEAU : Liste des modules (ex: IHM, Gestion...)
+  links?: ProjectLink[];
 }

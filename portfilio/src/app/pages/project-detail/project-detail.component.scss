@@ -15,17 +15,15 @@
 // --- IMAGES GRID ---
 .images-grid-container {
   display: flex; gap: 1.5rem;
-  height: 400px; // Hauteur fixe pour la grille
+  height: 400px;
   margin-bottom: 1.5rem;
 
-  // Image principale (50% ou 100% si seule)
   .main-image-wrapper {
-    flex: 1;
-    border-radius: 20px; overflow: hidden;
+    flex: 1; border-radius: 20px; overflow: hidden;
     .img-cover { width: 100%; height: 100%; object-fit: cover; }
   }
 
-  // Grille secondaire (50%)
+  // --- LOGIQUE GRILLE MODIFIÉE ---
   .secondary-images-grid {
     flex: 1;
     display: grid;
@@ -36,6 +34,19 @@
     .sub-image-wrapper {
       border-radius: 16px; overflow: hidden;
       .img-cover { width: 100%; height: 100%; object-fit: cover; }
+
+      // LOGIQUE DE REMPLISSAGE (Bas -> Haut)
+      // Index 0 : Bas Gauche
+      &.item-0 { grid-column: 1; grid-row: 2; }
+
+      // Index 1 : Bas Droite
+      &.item-1 { grid-column: 2; grid-row: 2; }
+
+      // Index 2 : Haut Gauche
+      &.item-2 { grid-column: 1; grid-row: 1; }
+
+      // Index 3 : Haut Droite
+      &.item-3 { grid-column: 2; grid-row: 1; }
     }
   }
 
@@ -118,27 +129,79 @@
 
 // --- CONTENU INFOS ---
 .infos-section {
-  display: flex; flex-direction: column; gap: 0.5rem; // Petit gap entre les accordéons
+  display: flex; flex-direction: column; gap: 0.5rem;
 
-  // Style interne du contenu
-  .tags-group {
-    margin-top: 1.5rem;
+  // Style commun pour les lignes d'info (Langage, Promo...)
+  .info-row {
+    margin-top: 1rem;
     display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+
+    strong { color: #2D0C13; font-weight: 800; }
 
     .tags-list {
       display: flex; gap: 0.5rem; flex-wrap: wrap;
+
       .tag-pill {
         background-color: $color-orange;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 12px;
+        color: white; padding: 4px 12px; border-radius: 12px;
         font-size: 0.85rem; font-weight: 700;
       }
     }
   }
 
-  .links-group {
-    margin-top: 1rem;
-    .link-text { color: #2D0C13; text-decoration: underline; font-weight: 600; }
+  // Méta data dans l'origine
+  .origin-meta {
+    margin-top: 1.5rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+}
+
+.links-container {
+  margin-top: 1.5rem; // Espace avec les langages
+  display: flex;
+  flex-direction: column; // Label au dessus, liens en dessous
+  gap: 0.5rem;
+
+  .main-label {
+    font-size: 1rem; // Meme taille que "Langages utilisés"
+    color: #2D0C13;
+    font-weight: 800;
+  }
+
+  .links-list-chips {
+    display: flex;
+    flex-wrap: wrap; // Permet de passer à la ligne si trop de liens
+    gap: 0.8rem; // Espace entre les boutons
+
+    .link-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px; // Taille confortable
+      background-color: white; // Fond neutre par défaut
+      border: 1px solid rgba(#2D0C13, 0.15); // Bordure subtile pour délimiter
+      border-radius: 20px; // Arrondi comme les auteurs/langages
+
+      text-decoration: none;
+      color: #2D0C13;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+      // Icône Maillon
+      .link-icon { color: $color-orange; }
+
+      // Flèche sortie
+      .external-icon { opacity: 0.4; transition: opacity 0.2s; }
+
+      // --- HOVER EFFECT (Similaire aux Auteurs) ---
+      &:hover {
+        background-color: #FFDdd0; // Le beige orangé
+        border-color: transparent; // On cache la bordure grise
+        color: darken($color-orange, 5%); // Texte devient orange foncé
+        transform: translateY(-2px); // Petit effet 3D
+        box-shadow: 0 4px 10px rgba($color-orange, 0.15); // Ombre portée légère
+
+        .external-icon { opacity: 1; stroke-width: 2.5; }
+      }
+    }
   }
 }

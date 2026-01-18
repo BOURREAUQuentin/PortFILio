@@ -21,7 +21,7 @@
       @if (project.additionalImages && project.additionalImages.length > 0) {
         <div class="secondary-images-grid">
           @for (img of project.additionalImages.slice(0, 4); track $index) {
-            <div class="sub-image-wrapper">
+            <div class="sub-image-wrapper item-{{ $index }}">
               <img [src]="img" alt="Gallery" class="img-cover">
             </div>
           }
@@ -30,10 +30,8 @@
     </section>
 
     <section class="header-section">
-
       <div class="title-block">
         <h1>{{ project.title }}</h1>
-
         <div class="authors-list">
           @for (author of project.authors; track author.id) {
             <div class="author-item clickable">
@@ -45,20 +43,16 @@
       </div>
 
       <div class="actions-block">
-
         <button class="action-btn fav" [class.active]="project.isFavorite" (click)="toggleFavorite()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" [attr.fill]="project.isFavorite ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
         </button>
-
         @if (isEditable) {
           <div class="menu-wrapper">
             <button class="action-btn edit" (click)="toggleMenu()">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
             </button>
-
             @if (isMenuOpen) {
               <div class="menu-overlay" (click)="isMenuOpen = false"></div>
-
               <div class="action-dropdown">
                 <button class="dropdown-item" (click)="onEdit()">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -73,7 +67,6 @@
             }
           </div>
         }
-
       </div>
     </section>
 
@@ -82,7 +75,7 @@
       <app-collapsible-section title="Présentation générale du projet" [isOpen]="true">
         <p>{{ project.description }}</p>
 
-        <div class="tags-group">
+        <div class="info-row">
           <strong>Langages utilisés :</strong>
           <div class="tags-list">
             @for (tag of project.tags; track tag) {
@@ -91,10 +84,22 @@
           </div>
         </div>
 
-        @if (project.links?.github) {
-          <div class="links-group">
-            <strong>Liens :</strong>
-            <a [href]="project.links?.github" target="_blank" class="link-text">{{ project.links?.github }}</a>
+        @if (project.links && project.links.length > 0) {
+          <div class="links-container">
+            <strong class="main-label">Liens :</strong>
+
+            <div class="links-list-chips">
+              @for (link of project.links; track link.url) {
+                <a [href]="link.url" target="_blank" class="link-chip" [title]="link.url">
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="link-icon"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+
+                  <span>{{ link.title }}</span>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                </a>
+              }
+            </div>
           </div>
         }
       </app-collapsible-section>
@@ -102,6 +107,26 @@
       @if (project.origin) {
         <app-collapsible-section title="Origine du projet">
           <p>{{ project.origin }}</p>
+
+          <div class="origin-meta">
+            <div class="info-row">
+              <div class="tags-list">
+                <strong>Année de promotion :</strong>
+                <span class="tag-pill">{{ project.promo }}</span>
+              </div>
+            </div>
+
+            @if (project.modules && project.modules.length > 0) {
+              <div class="info-row">
+                <strong>Modules sollicités :</strong>
+                <div class="tags-list">
+                  @for (mod of project.modules; track mod) {
+                    <span class="tag-pill">{{ mod }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </app-collapsible-section>
       }
 

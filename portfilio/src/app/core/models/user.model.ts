@@ -17,4 +17,7 @@ export interface User {
 
   // NOUVEAU : Un tableau flexible de liens
   links?: UserLink[];
+
+  // NOUVEAU : Liste des ID des projets likés par CET utilisateur
+  favorites?: number[];
 }
