@@ -1,25 +1,12 @@
 @import '../../../../styles/variables';
 
-// --- OVERLAY POUR FERMER LE MENU ---
 .click-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 150; // En dessous du dropdown (200)
-  cursor: default;
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 150; cursor: default;
 }
 
 .app-header {
-  // Fixe en haut
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-
-  // Design
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
   background-color: rgba($color-bg-hero, 0.9);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(0,0,0,0.03);
@@ -32,34 +19,40 @@
 
   // --- GAUCHE ---
   .header-left {
-    flex: 1;
-    .logo-img { height: 40px; }
+    flex: 0 0 auto;
+    position: relative; z-index: 10;
+
+    .logo-link {
+      display: block; width: fit-content; cursor: pointer; line-height: 0;
+    }
+    .logo-img { height: 40px; display: block; }
   }
 
-  .btn-back {
-    background: none; border: none; cursor: pointer;
-    display: flex; align-items: center; gap: 0.5rem;
-    color: $color-dark; padding: 0;
+  // --- CENTRE (Absolu) ---
+  .left-section {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    display: flex; align-items: center; justify-content: center;
+    white-space: nowrap;
 
-    svg { width: 24px; height: 24px; transition: transform 0.2s; }
-    .back-text { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 800; }
+    .btn-back {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; gap: 0.5rem;
+      color: $color-dark; padding: 0;
 
-    &:hover {
-      color: $color-orange;
-      svg { transform: translateX(-3px); }
+      svg { width: 24px; height: 24px; transition: transform 0.2s; }
+      .back-text { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 800; }
+
+      &:hover { color: $color-orange; svg { transform: translateX(-3px); } }
     }
   }
 
-  // --- CENTRE ---
-  .header-center {
-    flex: 2; display: flex; justify-content: center; align-items: center; gap: 0.5rem;
-    .back-btn { background: none; border: none; cursor: pointer; color: $color-dark; &:hover { color: $color-orange; } }
-    .project-title { font-size: 1.25rem; font-weight: 700; color: $color-dark; margin: 0; }
-  }
-
-  // --- DROITE ---
+  // --- DROITE (Correction ici) ---
   .header-right {
-    flex: 1; display: flex; justify-content: flex-end; align-items: center; gap: 1rem;
+    margin-left: auto;
+    display: flex; justify-content: flex-end; align-items: center; gap: 1rem;
+
+    // CORRECTION : z-index doit être supérieur à l'overlay (150)
+    position: relative; z-index: 200;
 
     .icon-btn {
       background: none; border: none; cursor: pointer; padding: 0;
@@ -67,7 +60,6 @@
       display: flex; justify-content: center; align-items: center;
       color: $color-dark; transition: all 0.2s ease;
 
-      // Taille forcée des icônes (Correction précédente)
       svg { width: 22px; height: 22px; pointer-events: none; }
 
       &:hover, &.active {
@@ -78,23 +70,14 @@
 
     .favorite-btn { color: #C05858; &:hover { color: darken(#C05858, 10%); } }
 
-    // CONTENEUR PROFIL
     .profile-container {
-      position: relative; // Important pour ancrer le menu absolu
-
+      position: relative;
       .profile-dropdown {
-        position: absolute;
-        top: 120%;
-        right: 0;
-        width: 200px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        padding: 0.5rem;
-
-        // Z-INDEX : Doit être supérieur à l'overlay (150)
-        z-index: 200;
-
+        position: absolute; top: 120%; right: 0; width: 200px;
+        background: white; border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 0.5rem;
+        // Le z-index ici est relatif au parent (.header-right: 200), donc il sera au-dessus
+        z-index: 201;
         display: flex; flex-direction: column; gap: 4px;
 
         &::before {
@@ -103,27 +86,17 @@
         }
 
         .dropdown-item {
-          display: flex; align-items: center; gap: 10px;
-          width: 100%; padding: 10px 15px;
+          display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 15px;
           background: none; border: none; text-align: left;
           font-family: 'Inter', sans-serif; font-size: 0.95rem; color: $color-dark;
           border-radius: 8px; cursor: pointer; transition: background 0.2s;
-          position: relative; z-index: 201; // Au dessus du fond
 
           svg { color: #888; transition: color 0.2s; }
-
-          &:hover {
-            background-color: rgba($color-dark, 0.05);
-            svg { color: $color-orange; }
-          }
+          &:hover { background-color: rgba($color-dark, 0.05); svg { color: $color-orange; } }
         }
-
         .divider { height: 1px; background-color: #eee; margin: 4px 0; }
-
         .dropdown-item.logout {
-          color: #d63031;
-          &:hover { background-color: rgba(214, 48, 49, 0.08); }
-          svg { color: #d63031; }
+          color: #d63031; &:hover { background-color: rgba(214, 48, 49, 0.08); } svg { color: #d63031; }
         }
       }
     }
