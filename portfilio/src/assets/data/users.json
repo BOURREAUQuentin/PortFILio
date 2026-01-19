@@ -7,12 +7,13 @@
     "lastName": "Bourreau",
     "promo": "A1",
     "title": "Développeur Back-End",
-    "description": "Étudiant ingénieur passionné par le développement web et l'IoT. Toujours à la recherche de nouveaux défis.",
+    "description": "Étudiant ingénieur passionné par le développement web et l'IoT.",
     "links": [
       { "type": "github", "url": "https://github.com/quentin" },
       { "type": "linkedin", "url": "https://linkedin.com/in/quentin" },
       { "type": "portfolio", "url": "https://mon-site.com" }
-    ]
+    ],
+    "avatarUrl": "https://i.pravatar.cc/150?u=1"
   },
   {
     "id": 2,
@@ -22,6 +23,26 @@
     "lastName": "Autret",
     "promo": "A1",
     "title": "Développeur Front-End",
-    "description": "Passionné par Angular et l'UX Design."
-  }
+    "description": "Passionné par Angular et l'UX Design.",
+    "avatarUrl": "https://i.pravatar.cc/150?u=2"
+  },
+  { "id": 3, "firstName": "Aloïs", "lastName": "Fleury", "promo": "A2", "title": "Ingénieur Système", "avatarUrl": "https://i.pravatar.cc/150?u=3" },
+  { "id": 4, "firstName": "Sarah", "lastName": "Connor", "promo": "A1", "title": "Experte IoT", "avatarUrl": "https://i.pravatar.cc/150?u=4" },
+  { "id": 5, "firstName": "John", "lastName": "Doe", "promo": "A1", "title": "Développeur", "avatarUrl": "https://i.pravatar.cc/150?u=5" },
+  { "id": 6, "firstName": "Alice", "lastName": "Martin", "promo": "A3", "title": "Data Scientist", "avatarUrl": "https://i.pravatar.cc/150?u=6" },
+  { "id": 7, "firstName": "Bob", "lastName": "Dupuis", "promo": "A3", "title": "Ingénieur IA", "avatarUrl": "https://i.pravatar.cc/150?u=7" },
+  { "id": 8, "firstName": "Charlie", "lastName": "Dreem", "promo": "A3", "title": "Dev Python", "avatarUrl": "https://i.pravatar.cc/150?u=8" },
+  { "id": 9, "firstName": "David", "lastName": "Leroi", "promo": "A3", "title": "Chercheur ML", "avatarUrl": "https://i.pravatar.cc/150?u=9" },
+  { "id": 10, "firstName": "Thomas", "lastName": "Anderson", "promo": "A2", "title": "Architecte Système", "avatarUrl": "https://i.pravatar.cc/150?u=10" },
+  { "id": 11, "firstName": "Groupe", "lastName": "A", "promo": "A1", "title": "Équipe Projet", "avatarUrl": "https://i.pravatar.cc/150?u=11" },
+  { "id": 12, "firstName": "Groupe", "lastName": "B", "promo": "A1", "title": "Équipe Projet", "avatarUrl": "https://i.pravatar.cc/150?u=12" },
+  { "id": 13, "firstName": "Sophie", "lastName": "Fonfec", "promo": "A3", "title": "DevOps Lead", "avatarUrl": "https://i.pravatar.cc/150?u=13" },
+  { "id": 14, "firstName": "Team", "lastName": "AI", "promo": "A3", "title": "Groupe IA", "avatarUrl": "https://i.pravatar.cc/150?u=14" },
+  { "id": 15, "firstName": "Team", "lastName": "Web", "promo": "A3", "title": "Groupe Web", "avatarUrl": "https://i.pravatar.cc/150?u=15" },
+  { "id": 16, "firstName": "Mr", "lastName": "Robot", "promo": "A2", "title": "Hacker Éthique", "avatarUrl": "https://i.pravatar.cc/150?u=16" },
+  { "id": 17, "firstName": "Music", "lastName": "Man", "promo": "A2", "title": "Dev Android", "avatarUrl": "https://i.pravatar.cc/150?u=17" },
+  { "id": 18, "firstName": "Sound", "lastName": "Guy", "promo": "A2", "title": "Ingénieur Son", "avatarUrl": "https://i.pravatar.cc/150?u=18" },
+  { "id": 19, "firstName": "Grand", "lastName": "Master", "promo": "A3", "title": "Game Dev", "avatarUrl": "https://i.pravatar.cc/150?u=19" },
+  { "id": 20, "firstName": "Novice", "lastName": "Dev", "promo": "A3", "title": "Junior Dev", "avatarUrl": "https://i.pravatar.cc/150?u=20" },
+  { "id": 21, "firstName": "Satoshi", "lastName": "N.", "promo": "A3", "title": "Blockchain Expert", "avatarUrl": "https://i.pravatar.cc/150?u=21" }
 ]
