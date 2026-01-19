@@ -1,159 +1,88 @@
 @import '../../../../styles/variables';
 
-:host {
-  display: block;
-  width: 100%;
-}
+:host { display: block; width: 100%; }
 
 .search-bar-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+  max-width: 1100px; margin: 0 auto;
+  display: flex; gap: 1rem; align-items: center;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  @media (max-width: 768px) { flex-direction: column; align-items: stretch; }
 
   .input-wrapper {
-    flex: 1;
-    position: relative;
-
+    flex: 1; position: relative;
     input {
-      width: 100%;
-      padding: 14px 45px 14px 50px;
-      border-radius: 50px;
-      border: 1px solid #E0E0E0;
-      background: white;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-      color: #2D0C13;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-      transition: all 0.3s ease;
-
+      width: 100%; padding: 14px 45px 14px 50px;
+      border-radius: 50px; border: 1px solid #E0E0E0;
+      background: white; font-family: 'Inter', sans-serif; font-size: 1rem; color: #2D0C13;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03); transition: all 0.3s ease;
       &::placeholder { color: #aaa; }
-
-      &:focus {
-        outline: none;
-        border-color: $color-orange;
-        box-shadow: 0 4px 15px rgba($color-orange, 0.15);
-      }
+      &:focus { outline: none; border-color: $color-orange; box-shadow: 0 4px 15px rgba($color-orange, 0.15); }
     }
-
     .search-icon {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
-      color: #aaa;
-      pointer-events: none;
+      position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+      width: 22px; height: 22px; color: #aaa; pointer-events: none;
     }
-
     .btn-clear {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none; border: none;
-      color: #999;
-      cursor: pointer;
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: #999; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      padding: 4px;
-      border-radius: 50%;
-      transition: all 0.2s;
-
-      &:hover {
-        background-color: #f0f0f0;
-        color: #2D0C13;
-      }
+      padding: 4px; border-radius: 50%; transition: all 0.2s;
+      &:hover { background-color: #f0f0f0; color: #2D0C13; }
     }
   }
 
   .actions-group {
-    display: flex;
-    gap: 1rem;
-    @media (max-width: 768px) {
-      justify-content: space-between;
-    }
+    display: flex; gap: 1rem;
+    @media (max-width: 768px) { justify-content: space-between; }
   }
 }
 
 // --- BOUTONS ---
-.dropdown-wrapper {
-  position: relative;
+.dropdown-wrapper { position: relative; }
 
-  button.btn-filter, button.btn-sort {
-    display: flex; align-items: center; gap: 8px;
-    height: 50px;
-    padding: 0 24px;
-    border-radius: 50px;
-    border: 1px solid #E0E0E0;
-    background: white;
-    color: #2D0C13;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    transition: all 0.2s;
+button.btn-filter, button.btn-sort {
+  display: flex; align-items: center; gap: 8px;
+  height: 50px; padding: 0 24px;
+  border-radius: 50px; border: 1px solid #E0E0E0;
+  background: white; color: #2D0C13;
+  font-size: 0.95rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03); transition: all 0.2s;
 
-    svg { width: 18px; height: 18px; }
+  svg { width: 18px; height: 18px; }
 
-    &:hover {
-      border-color: #ccc;
-      background: #fafafa;
-      transform: translateY(-1px);
-    }
+  &:hover { border-color: #ccc; background: #fafafa; transform: translateY(-1px); }
 
-    &.active {
-      background-color: #2D0C13;
-      color: white;
-      border-color: #2D0C13;
-      .badge { background: $color-orange; color: white; }
-    }
+  // STYLE ACTIF COMMUN (Pour Tri et Filtre)
+  &.active {
+    background-color: #2D0C13; // Bordeaux
+    color: white; border-color: #2D0C13;
+    .badge { background: $color-orange; color: white; }
   }
+}
 
-  .badge {
-    background: $color-orange; color: white;
-    font-size: 0.75rem; padding: 2px 6px; border-radius: 10px;
-    min-width: 20px; text-align: center;
-    margin-left: 4px;
-  }
+.badge {
+  background: $color-orange; color: white;
+  font-size: 0.75rem; padding: 2px 6px; border-radius: 10px;
+  min-width: 20px; text-align: center; margin-left: 4px;
 }
 
 // --- DROPDOWNS ---
 .filter-dropdown, .sort-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: white;
-  border-radius: 20px;
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: white; border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-  z-index: 100;
-  overflow: hidden;
-  border: 1px solid #f0f0f0;
+  z-index: 100; overflow: hidden; border: 1px solid #f0f0f0;
   animation: fadeIn 0.2s ease-out;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
 // --- FILTRE SPECIFIQUE ---
 .filter-dropdown {
-  width: 340px;
-  display: flex; flex-direction: column;
+  width: 340px; display: flex; flex-direction: column;
 
   .filter-header {
-    padding: 1.2rem;
-    border-bottom: 1px solid #f5f5f5;
+    padding: 1.2rem; border-bottom: 1px solid #f5f5f5;
     display: flex; justify-content: space-between; align-items: center;
-
     h3 { margin: 0; font-size: 1.1rem; color: #2D0C13; font-weight: 800; }
     .btn-reset {
       background: none; border: none; color: #999;
@@ -162,56 +91,67 @@
     }
   }
 
-  .filter-scroll-content {
-    max-height: 400px; overflow-y: auto;
-    padding: 1.2rem;
-  }
+  .filter-scroll-content { max-height: 400px; overflow-y: auto; padding: 1.2rem; }
 
   .filter-section {
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.2rem; // Réduit un peu
     transition: opacity 0.3s;
-
     &:last-child { margin-bottom: 0; }
 
     &.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      .section-header { pointer-events: auto; }
+      opacity: 0.5;
+      .chips-grid { pointer-events: none; opacity: 0.5; }
     }
 
+    // HEADER ACCORDÉON
     .section-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1rem;
-      .section-title { font-weight: 700; font-size: 0.9rem; color: #2D0C13; text-transform: uppercase; letter-spacing: 0.5px; }
+      margin-bottom: 0.8rem; cursor: pointer; // Cliquable
+      padding: 4px 0;
+
+      .header-left {
+        display: flex; align-items: center; gap: 8px;
+
+        // Chevron qui tourne
+        .chevron {
+          font-size: 0.7rem; color: #999;
+          transition: transform 0.3s ease;
+          &.rotated { transform: rotate(-90deg); }
+        }
+
+        .section-title {
+          font-weight: 700; font-size: 0.9rem; color: #2D0C13;
+          text-transform: uppercase; letter-spacing: 0.5px;
+        }
+      }
+
+      &:hover .header-left .section-title { color: $color-orange; }
     }
 
     .chips-grid {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      display: flex; flex-wrap: wrap; gap: 0.6rem; animation: slideDown 0.2s ease-out;
 
       .filter-chip {
         cursor: pointer; position: relative;
         input { display: none; }
-
         span {
-          display: block;
-          padding: 8px 14px;
-          border-radius: 12px;
-          background: #f4f4f4;
+          display: block; padding: 8px 14px;
+          border-radius: 12px; background: #f4f4f4;
           color: #666; font-size: 0.85rem; font-weight: 600;
-          transition: all 0.2s;
-          border: 1px solid transparent;
+          transition: all 0.2s; border: 1px solid transparent;
         }
-
         input:checked + span {
-          background: #FFEEE6;
-          color: $color-orange;
-          border-color: rgba($color-orange, 0.2);
+          background: #FFEEE6; color: $color-orange; border-color: rgba($color-orange, 0.2);
         }
-
         &:hover span { background: #eee; }
       }
     }
   }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 // --- SWITCH ---

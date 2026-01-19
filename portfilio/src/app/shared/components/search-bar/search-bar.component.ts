@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, Input, HostListener, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProjectService } from '../../../core/services/project.service'; // Import Service
+import { ProjectService } from '../../../core/services/project.service';
 import { ProjectFilters } from '../../../core/models/project.model';
 
 export type SortOption = 'default' | 'recent' | 'oldest' | 'az' | 'za';
@@ -15,7 +15,7 @@ export type SortOption = 'default' | 'recent' | 'oldest' | 'az' | 'za';
 })
 export class SearchBarComponent implements OnInit {
 
-  private projectService = inject(ProjectService); // Injection du service
+  private projectService = inject(ProjectService);
   private eRef = inject(ElementRef);
 
   @Input() searchQuery: string = '';
@@ -24,7 +24,6 @@ export class SearchBarComponent implements OnInit {
   @Output() sortChange = new EventEmitter<SortOption>();
   @Output() filterChange = new EventEmitter<ProjectFilters>();
 
-  // Listes dynamiques (chargées automatiquement)
   availableTags: string[] = [];
   availableModules: string[] = [];
   availablePromos: string[] = [];
@@ -38,26 +37,29 @@ export class SearchBarComponent implements OnInit {
     sectionsActive: { tags: true, modules: true, promos: true }
   };
 
-  // --- CHARGEMENT AUTOMATIQUE DES DONNÉES ---
+  // NOUVEAU : État visuel (ouvert/fermé) des sections
+  // Par défaut, on peut les laisser ouvertes ou fermées selon ta préférence
+  sectionsExpanded = {
+    tags: true,
+    modules: false, // Exemple : fermé par défaut pour gagner de la place
+    promos: false
+  };
+
   ngOnInit(): void {
     this.projectService.getProjects().subscribe(projects => {
       if (projects) {
-        // 1. Tags uniques
         const allTags = projects.flatMap(p => p.tags);
         this.availableTags = [...new Set(allTags)].sort();
 
-        // 2. Modules uniques
         const allModules = projects.flatMap(p => p.modules || []);
         this.availableModules = [...new Set(allModules)].sort();
 
-        // 3. Promos uniques
         const allPromos = projects.map(p => p.promo);
         this.availablePromos = [...new Set(allPromos)].sort();
       }
     });
   }
 
-  // --- CLICK OUTSIDE ---
   @HostListener('document:click', ['$event'])
   clickOut(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -69,7 +71,13 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  // --- RECHERCHE ---
+  // --- ACTIONS ---
+
+  // NOUVEAU : Basculer l'affichage d'une section
+  toggleExpansion(section: 'tags' | 'modules' | 'promos'): void {
+    this.sectionsExpanded[section] = !this.sectionsExpanded[section];
+  }
+
   onSearch(e: Event): void {
     const val = (e.target as HTMLInputElement).value;
     this.searchQuery = val;
@@ -81,7 +89,6 @@ export class SearchBarComponent implements OnInit {
     this.searchChange.emit('');
   }
 
-  // --- LOGIQUE FILTRES ---
   get activeFilterCount(): number {
     let count = 0;
     if (this.filters.sectionsActive.tags) count += this.filters.tags.length;
@@ -107,7 +114,10 @@ export class SearchBarComponent implements OnInit {
     return this.filters[category].includes(item);
   }
 
-  toggleSection(section: 'tags' | 'modules' | 'promos'): void {
+  toggleSection(section: 'tags' | 'modules' | 'promos', event?: Event): void {
+    // Si l'event vient du switch, on empêche qu'il déclenche aussi le repli (toggleExpansion)
+    if (event) event.stopPropagation();
+
     this.filters.sectionsActive[section] = !this.filters.sectionsActive[section];
     this.emitFilters();
   }
@@ -118,6 +128,8 @@ export class SearchBarComponent implements OnInit {
     this.filters.promos = [];
     this.filters.sectionsActive = { tags: true, modules: true, promos: true };
     this.emitFilters();
+    // On peut aussi réouvrir toutes les sections au reset si on veut
+    this.sectionsExpanded = { tags: true, modules: true, promos: true };
     this.isFilterMenuOpen = false;
   }
 
@@ -125,7 +137,6 @@ export class SearchBarComponent implements OnInit {
     this.filterChange.emit({ ...this.filters });
   }
 
-  // --- LOGIQUE TRI ---
   toggleSortMenu(): void {
     this.isSortMenuOpen = !this.isSortMenuOpen;
     if (this.isSortMenuOpen) this.isFilterMenuOpen = false;
