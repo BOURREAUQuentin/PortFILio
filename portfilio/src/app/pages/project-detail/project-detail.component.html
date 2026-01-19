@@ -9,21 +9,55 @@
   </app-confirm-modal>
 }
 
+@if (isLightboxOpen) {
+  <div class="lightbox-overlay" (click)="closeLightbox()">
+
+    <button class="btn-close" (click)="closeLightbox()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+
+      <button class="nav-btn prev" (click)="prevImage($event)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+
+      <img [src]="allImages[currentLightboxIndex]" class="lightbox-img" alt="Zoom">
+
+      <button class="nav-btn next" (click)="nextImage($event)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+
+      <div class="counter">{{ currentLightboxIndex + 1 }} / {{ allImages.length }}</div>
+    </div>
+  </div>
+}
+
 <main class="project-detail-page">
   @if (project) {
 
     <section class="images-grid-container">
 
-      <div class="main-image-wrapper">
+      <div class="main-image-wrapper" (click)="openLightbox(0)">
         <img [src]="project.imageUrl" [alt]="project.title" class="img-cover">
+
+        <div class="zoom-hint">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+        </div>
       </div>
 
       @if (project.additionalImages && project.additionalImages.length > 0) {
         <div class="secondary-images-grid">
           @for (img of project.additionalImages.slice(0, 4); track $index) {
-            <div class="sub-image-wrapper item-{{ $index }}">
+
+            <div class="sub-image-wrapper item-{{ $index }}" (click)="openLightbox($index + 1)">
               <img [src]="img" alt="Gallery" class="img-cover">
+
+              <div class="zoom-hint">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+              </div>
             </div>
+
           }
         </div>
       }
@@ -71,31 +105,22 @@
     </section>
 
     <section class="infos-section">
-
       <app-collapsible-section title="Présentation générale du projet" [isOpen]="true">
         <p>{{ project.description }}</p>
-
         <div class="info-row">
           <strong>Langages utilisés :</strong>
           <div class="tags-list">
-            @for (tag of project.tags; track tag) {
-              <span class="tag-pill">{{ tag }}</span>
-            }
+            @for (tag of project.tags; track tag) { <span class="tag-pill">{{ tag }}</span> }
           </div>
         </div>
-
         @if (project.links && project.links.length > 0) {
           <div class="links-container">
             <strong class="main-label">Liens :</strong>
-
             <div class="links-list-chips">
               @for (link of project.links; track link.url) {
                 <a [href]="link.url" target="_blank" class="link-chip" [title]="link.url">
-
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="link-icon"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-
                   <span>{{ link.title }}</span>
-
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-icon"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                 </a>
               }
@@ -107,22 +132,15 @@
       @if (project.origin) {
         <app-collapsible-section title="Origine du projet">
           <p>{{ project.origin }}</p>
-
           <div class="origin-meta">
             <div class="info-row">
-              <div class="tags-list">
-                <strong>Année de promotion :</strong>
-                <span class="tag-pill">{{ project.promo }}</span>
-              </div>
+              <div class="tags-list"><strong>Année de promotion :</strong><span class="tag-pill">{{ project.promo }}</span></div>
             </div>
-
             @if (project.modules && project.modules.length > 0) {
               <div class="info-row">
                 <strong>Modules sollicités :</strong>
                 <div class="tags-list">
-                  @for (mod of project.modules; track mod) {
-                    <span class="tag-pill">{{ mod }}</span>
-                  }
+                  @for (mod of project.modules; track mod) { <span class="tag-pill">{{ mod }}</span> }
                 </div>
               </div>
             }
@@ -135,7 +153,6 @@
           <p>{{ project.skillsLearned }}</p>
         </app-collapsible-section>
       }
-
     </section>
 
   } @else {

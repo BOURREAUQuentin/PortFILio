@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, HostListener } from '@angular/core'; // HostListener ajouté
 import { CommonModule } from '@angular/common';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
@@ -34,45 +34,49 @@ export class ProjectDetailComponent implements OnInit {
   private authService = inject(AuthService);
 
   project: Project | null = null;
-  currentUser = this.authService.getCurrentUser(); // Pour savoir si on peut éditer
+  currentUser = this.authService.getCurrentUser();
 
-  // Etats Menu
+  // Etats Menu & Modal Suppression
   isMenuOpen = false;
   isDeleteModalOpen = false;
+
+  // --- ETATS LIGHTBOX (CAROUSEL) ---
+  isLightboxOpen = false;
+  currentLightboxIndex = 0;
+  allImages: string[] = []; // Contiendra [MainImage, ...AdditionalImages]
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
       this.projectService.getProjects().subscribe(projects => {
-        // On simule un "getById" via le tableau complet (optimisable coté service)
         this.project = projects.find(p => p.id === id) || null;
+
+        // Préparation du tableau d'images pour le carousel
+        if (this.project) {
+          this.allImages = [this.project.imageUrl];
+          if (this.project.additionalImages) {
+            this.allImages.push(...this.project.additionalImages);
+          }
+        }
       });
     }
   }
 
   // --- GETTERS ---
   get isEditable(): boolean {
-    // Si l'utilisateur courant est dans les auteurs
     if (!this.project || !this.currentUser) return false;
     return this.project.authors.some(a => a.id === this.currentUser?.id);
   }
 
-  // --- ACTIONS ---
-
+  // --- ACTIONS PROJET ---
   toggleFavorite(): void {
-    if (this.project) {
-      this.projectService.toggleFavorite(this.project.id);
-    }
+    if (this.project) this.projectService.toggleFavorite(this.project.id);
   }
 
-  toggleMenu(): void {
-    this.isMenuOpen = !this.isMenuOpen;
-  }
+  toggleMenu(): void { this.isMenuOpen = !this.isMenuOpen; }
 
-  // Edit / Delete logic
   onEdit(): void {
     this.isMenuOpen = false;
-    console.log('Edit project', this.project?.id);
     this.router.navigate(['/edit-project', this.project?.id]);
   }
 
@@ -85,11 +89,51 @@ export class ProjectDetailComponent implements OnInit {
     if (this.project) {
       this.projectService.deleteProject(this.project.id);
       this.isDeleteModalOpen = false;
-      this.router.navigate(['/profile']); // Retour profil après suppr
+      this.router.navigate(['/profile']);
     }
   }
 
-  cancelDelete(): void {
-    this.isDeleteModalOpen = false;
+  cancelDelete(): void { this.isDeleteModalOpen = false; }
+
+  // --- ACTIONS LIGHTBOX ---
+
+  openLightbox(index: number): void {
+    this.currentLightboxIndex = index;
+    this.isLightboxOpen = true;
+    // On bloque le scroll de la page derrière
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeLightbox(): void {
+    this.isLightboxOpen = false;
+    document.body.style.overflow = ''; // On réactive le scroll
+  }
+
+  nextImage(event?: Event): void {
+    event?.stopPropagation();
+    if (this.currentLightboxIndex < this.allImages.length - 1) {
+      this.currentLightboxIndex++;
+    } else {
+      this.currentLightboxIndex = 0; // Boucle
+    }
+  }
+
+  prevImage(event?: Event): void {
+    event?.stopPropagation();
+    if (this.currentLightboxIndex > 0) {
+      this.currentLightboxIndex--;
+    } else {
+      this.currentLightboxIndex = this.allImages.length - 1; // Boucle
+    }
+  }
+
+  // Gestion Clavier (Flèches + Echap)
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (!this.isLightboxOpen) return;
+
+    if (event.key === 'Escape') this.closeLightbox();
+    if (event.key === 'ArrowRight') this.nextImage();
+    if (event.key === 'ArrowLeft') this.prevImage();
   }
 }
