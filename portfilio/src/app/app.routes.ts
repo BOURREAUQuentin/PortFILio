@@ -22,7 +22,11 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   // Route pour voir le profil d'un autre (ou le sien via ID)
   { path: 'profile/:id', component: ProfileComponent },
-  { path: 'edit-profile', component: EditProfileComponent },
+  {
+    path: 'edit-profile',
+    component: EditProfileComponent,
+    canDeactivate: [(component: EditProfileComponent) => component.canDeactivate()]
+  },
 
   { path: 'project/:id', component: ProjectDetailComponent },
   // --- ROUTES AVEC GUARD ---

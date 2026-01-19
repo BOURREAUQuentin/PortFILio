@@ -1,19 +1,19 @@
-import {Component, OnInit, inject, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
-import { User, UserLink } from '../../core/models/user.model';
+import { User } from '../../core/models/user.model';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-import {AvatarComponent} from '../../shared/components/avatar/avatar.component';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { ConfirmModalComponent } from '../../shared/components/confirm-modal/confirm-modal.component';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, DragDropModule, HeaderComponent, AvatarComponent],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, AvatarComponent, ConfirmModalComponent],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
@@ -28,16 +28,7 @@ export class EditProfileComponent implements OnInit {
   currentUser: User | null = null;
   profileForm!: FormGroup;
 
-  // NOUVEAU : Pour stocker l'URL Base64 temporaire de la nouvelle image
   tempAvatarUrl: string | null = null;
-
-  // Helper pour le nom complet dans le template
-  get userFullName(): string {
-    if (!this.currentUser) return '';
-    return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
-  }
-
-  // Limite de taille (ex: 2MB)
   readonly MAX_FILE_SIZE = 2 * 1024 * 1024;
 
   // Liste des réseaux supportés
@@ -46,19 +37,30 @@ export class EditProfileComponent implements OnInit {
     { value: 'github', label: 'GitHub' },
     { value: 'instagram', label: 'Instagram' },
     { value: 'website', label: 'Site Web' },
-    { value: 'portfolio', label: 'Portfolio' }
+    { value: 'portfolio', label: 'Portfolio' },
+    { value: 'twitter', label: 'Twitter/X' }
   ];
 
+  // Gestion Navigation / Modal
+  showCancelModal = false;
+  private navigationSubject: Subject<boolean> | null = null;
+
+  // Gestion Drag & Drop
+  draggedLinkIndex: number | null = null;
+
+  get userFullName(): string {
+    if (!this.currentUser) return '';
+    return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+  }
+
   ngOnInit(): void {
-    // 1. Initialisation du formulaire vide
     this.profileForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       description: [''],
-      links: this.fb.array([]) // Liste dynamique
+      links: this.fb.array([])
     });
 
-    // 2. Remplissage avec les données actuelles
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user) {
@@ -68,106 +70,152 @@ export class EditProfileComponent implements OnInit {
           description: user.description || ''
         });
 
-        // Reset des liens existants dans le formulaire
         this.linksArray.clear();
-        if (user.links) {
-          user.links.forEach(link => this.addLink(link));
+        if (user.links && user.links.length > 0) {
+          user.links.forEach(link => this.addLink(link.type, link.url));
+        } else {
+          // Un lien vide par défaut
+          this.addLink();
         }
       }
     });
   }
 
-  // --- GETTERS ---
+  // --- GUARD (PROTECTION SORTIE) ---
+  canDeactivate(): Observable<boolean> | boolean {
+    if (!this.profileForm.dirty) return true;
+    this.showCancelModal = true;
+    this.navigationSubject = new Subject<boolean>();
+    return this.navigationSubject.asObservable();
+  }
+
+  confirmCancel(): void {
+    this.showCancelModal = false;
+    // On force le reset pour que le Guard laisse passer la navigation suivante
+    this.profileForm.reset();
+
+    if (this.navigationSubject) {
+      this.navigationSubject.next(true); // Autorise la navigation en attente
+      this.navigationSubject.complete();
+    } else {
+      // Cas où on a cliqué sur le bouton Annuler du formulaire
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  closeModal(): void {
+    this.showCancelModal = false;
+    if (this.navigationSubject) {
+      this.navigationSubject.next(false); // Bloque la navigation
+      this.navigationSubject.complete();
+      this.navigationSubject = null; // Reset
+    }
+  }
+
+  requestCancel(): void {
+    if (this.profileForm.dirty) {
+      this.showCancelModal = true;
+    } else {
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  // --- GESTION DES LIENS ---
   get linksArray(): FormArray {
     return this.profileForm.get('links') as FormArray;
   }
 
-  // --- GESTION DES LIENS ---
+  // Validateur conditionnel : URL requise si Type rempli
+  linkValidator(control: AbstractControl): ValidationErrors | null {
+    const type = control.get('type')?.value;
+    const url = control.get('url')?.value;
+    if (type && !url) {
+      control.get('url')?.setErrors({ required: true });
+      return { urlMissing: true };
+    }
+    control.get('url')?.setErrors(null);
+    return null;
+  }
 
-  // Ajoute une ligne (vide ou pré-remplie)
-  addLink(data?: UserLink): void {
+  addLink(type: string = '', url: string = ''): void {
     const group = this.fb.group({
-      type: [data?.type || '', Validators.required],
-      url: [data?.url || '', Validators.required]
-    });
+      type: [type],
+      url: [url]
+    }, { validators: this.linkValidator });
     this.linksArray.push(group);
   }
 
   removeLink(index: number): void {
     this.linksArray.removeAt(index);
+    this.profileForm.markAsDirty(); // IMPORTANT
   }
 
-  // Logique Drag & Drop pour réordonner
-  drop(event: CdkDragDrop<string[]>): void {
-    moveItemInArray(this.linksArray.controls, event.previousIndex, event.currentIndex);
-    // On doit aussi mettre à jour la valeur brute du FormArray pour que Angular s'y retrouve
-    this.linksArray.updateValueAndValidity();
-  }
-
-  // --- LOGIQUE INTELLIGENTE (FILTRE) ---
-
-  // Retourne la liste des types disponibles pour une ligne donnée
-  // (Exclut ceux déjà sélectionnés AILLEURS, mais garde celui de la ligne actuelle)
-  getAvailableTypes(currentIndex: number): any[] {
-    const selectedTypes = this.linksArray.value.map((l: any) => l.type);
-
-    return this.linkTypes.filter(type => {
-      // On garde le type s'il n'est pas utilisé OU s'il est celui de la ligne en cours
-      const currentLineType = this.linksArray.at(currentIndex).get('type')?.value;
-      return !selectedTypes.includes(type.value) || type.value === currentLineType;
-    });
+  // Drag & Drop Natif
+  onLinkDragStart(index: number): void { this.draggedLinkIndex = index; }
+  onLinkDragOver(event: DragEvent): void { event.preventDefault(); }
+  onLinkDrop(index: number): void {
+    if (this.draggedLinkIndex !== null && this.draggedLinkIndex !== index) {
+      const currentGroup = this.linksArray.at(this.draggedLinkIndex);
+      this.linksArray.removeAt(this.draggedLinkIndex);
+      this.linksArray.insert(index, currentGroup);
+      this.profileForm.markAsDirty(); // IMPORTANT
+    }
+    this.draggedLinkIndex = null;
   }
 
   // --- GESTION IMAGE ---
-
   onRemoveAvatar(): void {
-    // On marque pour suppression en mettant une chaîne vide
     this.tempAvatarUrl = '';
-    // Si un fichier était sélectionné dans l'input, on le reset
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    if (fileInput) fileInput.value = '';
+    this.profileForm.markAsDirty(); // IMPORTANT
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
+    if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
-
-    // 1. Validations basiques
     if (!file.type.startsWith('image/')) {
-      this.toastService.show("Veuillez sélectionner un fichier image valide.", "error");
+      this.toastService.show("Format image invalide.", "error");
       return;
     }
 
-    if (file.size > this.MAX_FILE_SIZE) {
-      this.toastService.show("L'image est trop volumineuse (Max 2Mo).", "error");
-      return;
-    }
-
-    // 2. Lecture du fichier et conversion en Base64
-    const reader = new FileReader();
-
-    reader.onload = (e: any) => {
-      // Le résultat est une chaîne Base64 (data:image/png;base64,...)
-      this.tempAvatarUrl = e.target.result;
-
-      // Force la détection de changement pour afficher la preview
+    this.compressImage(file).then(base64 => {
+      this.tempAvatarUrl = base64;
+      this.profileForm.markAsDirty(); // IMPORTANT
       this.cdr.markForCheck();
-    };
+    }).catch(() => {
+      this.toastService.show("Erreur lors du traitement de l'image.", "error");
+    });
+  }
 
-    reader.readAsDataURL(file); // Lance la lecture
+  private compressImage(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const max = 500;
+          const scale = max / img.width;
+          canvas.width = max;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
   }
 
   // --- SOUMISSION ---
-
   onSubmit(): void {
     if (this.profileForm.invalid) {
-      this.toastService.show('Veuillez remplir tous les champs obligatoires (*)', 'error');
-      this.profileForm.markAllAsTouched(); // Affiche les erreurs rouges
+      this.toastService.show('Veuillez remplir les champs obligatoires (*)', 'error');
+      this.profileForm.markAllAsTouched();
       return;
     }
 
@@ -175,30 +223,32 @@ export class EditProfileComponent implements OnInit {
 
     const formValue = this.profileForm.value;
 
-    // 1. Par défaut, on garde l'URL actuelle.
+    // Gestion Image
     let finalAvatarUrl = this.currentUser.avatarUrl;
-
-    // 2. Si tempAvatarUrl n'est PAS null, ça veut dire qu'on y a touché.
-    //    Que ce soit une nouvelle image ('data:...') OU une suppression (''), on prend cette valeur.
     if (this.tempAvatarUrl !== null) {
       finalAvatarUrl = this.tempAvatarUrl;
     }
+
+    // Filtrer liens valides (ceux qui ont un type ET une url)
+    const validLinks = formValue.links.filter((l: any) => l.type && l.url);
 
     const updatedUser: User = {
       ...this.currentUser,
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       description: formValue.description,
-      links: formValue.links,
-      avatarUrl: finalAvatarUrl // On utilise l'URL calculée ci-dessus
+      links: validLinks,
+      avatarUrl: finalAvatarUrl
     };
 
-    this.authService.updateUser(updatedUser);
-    this.toastService.show('Profil mis à jour avec succès !', 'success');
-    this.router.navigate(['/profile']);
-  }
-
-  onCancel(): void {
-    this.router.navigate(['/profile']);
+    try {
+      this.authService.updateUser(updatedUser);
+      // Reset pour passer le Guard
+      this.profileForm.reset(formValue);
+      this.toastService.show('Profil mis à jour avec succès !', 'success');
+      this.router.navigate(['/profile']);
+    } catch (e) {
+      this.toastService.show('Erreur sauvegarde (Stockage plein ?)', 'error');
+    }
   }
 }
