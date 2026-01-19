@@ -132,21 +132,31 @@ export class ProjectService {
   }
 
   // Créer ou Mettre à jour
-  saveProject(project: Project): void {
+  saveProject(project: Project): number {
     const projects = this.projectsSubject.value;
-    const index = projects.findIndex(p => p.id === project.id);
 
-    if (index > -1) {
-      // EDIT
-      projects[index] = project;
-    } else {
-      // CREATE (Générer ID simple)
-      const newId = Math.max(...projects.map(p => p.id), 0) + 1;
-      project.id = newId;
-      projects.push(project);
+    // CAS 1 : ÉDITION (L'ID existe déjà)
+    if (project.id && project.id > 0) {
+      const index = projects.findIndex(p => p.id === project.id);
+      if (index > -1) {
+        projects[index] = project;
+        this.projectsSubject.next([...projects]);
+        this.saveToStorage(projects);
+        return project.id; // On retourne l'ID existant
+      }
     }
 
-    this.projectsSubject.next(projects);
-    this.saveToStorage(projects);
+    // CAS 2 : CRÉATION (Calcul du nouvel ID)
+    // On trouve l'ID max actuel et on ajoute 1
+    const maxId = projects.length > 0 ? Math.max(...projects.map(p => p.id)) : 0;
+    const newId = maxId + 1;
+
+    project.id = newId; // On assigne le nouvel ID
+
+    const newProjectsList = [...projects, project];
+    this.projectsSubject.next(newProjectsList);
+    this.saveToStorage(newProjectsList);
+
+    return newId; // On retourne le nouvel ID pour la redirection
   }
 }

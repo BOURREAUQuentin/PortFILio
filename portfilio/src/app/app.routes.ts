@@ -25,8 +25,17 @@ export const routes: Routes = [
   { path: 'edit-profile', component: EditProfileComponent },
 
   { path: 'project/:id', component: ProjectDetailComponent },
-  { path: 'create-project', component: ProjectFormComponent },
-  { path: 'edit-project/:id', component: ProjectFormComponent },
+  // --- ROUTES AVEC GUARD ---
+  {
+    path: 'create-project',
+    component: ProjectFormComponent,
+    canDeactivate: [(component: ProjectFormComponent) => component.canDeactivate()]
+  },
+  {
+    path: 'edit-project/:id',
+    component: ProjectFormComponent,
+    canDeactivate: [(component: ProjectFormComponent) => component.canDeactivate()]
+  },
 
   { path: 'about', component: AboutComponent },
   { path: 'legal', component: LegalComponent },

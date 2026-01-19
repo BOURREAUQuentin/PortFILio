@@ -19,17 +19,12 @@
   padding: 3rem;
   box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 
-  .form-title {
-    text-align: center; margin-bottom: 2.5rem;
-    font-size: 2rem; font-weight: 800;
-  }
+  .form-title { text-align: center; margin-bottom: 2.5rem; font-size: 2rem; font-weight: 800; }
 }
 
-// --- CHAMPS ---
 .form-group {
   margin-bottom: 1.5rem;
   display: flex; flex-direction: column; gap: 0.5rem;
-
   &.narrow { width: fit-content; min-width: 120px; }
 
   label {
@@ -37,17 +32,16 @@
     .req { color: #E74C3C; }
   }
 
+  .helper-text { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-left: 10px; margin-top: -5px; margin-bottom: 5px; }
+
   input[type="text"], textarea, select {
-    width: 100%; padding: 12px 20px;
-    border-radius: 20px; border: none;
-    background-color: #FFF5F0; // Beige clair
-    color: #2D0C13; font-family: 'Inter', sans-serif; font-size: 1rem;
+    width: 100%; padding: 12px 20px; border-radius: 20px; border: none;
+    background-color: #FFF5F0; color: #2D0C13; font-family: 'Inter', sans-serif; font-size: 1rem;
     &:focus { outline: 2px solid $color-orange; }
     &::placeholder { color: rgba(#2D0C13, 0.4); }
   }
 
   textarea.no-resize { resize: none; border-radius: 20px; }
-
   .error-msg { color: #E74C3C; font-size: 0.85rem; margin-left: 10px; }
 }
 
@@ -56,23 +50,28 @@
   display: flex; gap: 1rem; flex-wrap: wrap;
 
   .img-slot {
-    width: 100px; height: 100px;
-    border-radius: 16px; overflow: hidden; position: relative;
-    cursor: grab; transition: transform 0.2s;
-    background: #FFF5F0;
+    width: 100px; height: 100px; border-radius: 16px; overflow: hidden; position: relative;
+    cursor: grab; transition: transform 0.2s; background: #FFF5F0;
 
     &.main { width: 140px; height: 140px; }
 
     &.filled {
       img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 
+      // INDICATEUR DRAG VISIBLE
+      .drag-indicator {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        color: white; opacity: 0; transition: opacity 0.2s; pointer-events: none;
+        background: rgba(0,0,0,0.4); border-radius: 50%; padding: 8px;
+      }
+      &:hover .drag-indicator { opacity: 1; }
+
       .btn-remove-img {
         position: absolute; top: 5px; right: 5px;
         background: $color-orange; color: white; border: none;
         width: 20px; height: 20px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        cursor: pointer; opacity: 0.8; transition: opacity 0.2s;
-
+        cursor: pointer; opacity: 0.8; transition: opacity 0.2s; z-index: 10;
         &:hover { opacity: 1; transform: scale(1.1); }
       }
       .badge-main {
@@ -94,43 +93,30 @@
 // --- CHIPS INPUT ---
 .chips-input-container {
   display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
-  background: #FFF5F0; border-radius: 30px; padding: 6px 15px;
-  min-height: 48px;
+  background: #FFF5F0; border-radius: 30px; padding: 6px 15px; min-height: 48px;
 
   .chip {
     padding: 6px 14px; border-radius: 20px;
     display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem;
-
-    // TOUT EN ORANGE (Tags et Modules)
     &.orange-chip { background: #E8501D; color: white; }
-
-    // Auteurs en violet
     &.author-chip { background: #8E44AD; color: white; }
 
     .btn-close-chip {
       background: none; border: none; color: white; cursor: pointer; padding: 0;
-      display: flex; align-items: center;
-      opacity: 0.7; transition: all 0.2s;
-
+      display: flex; align-items: center; opacity: 0.7; transition: all 0.2s;
       &:hover { opacity: 1; transform: scale(1.2); }
     }
   }
 
   .autocomplete-wrapper {
     flex: 1; position: relative; min-width: 150px;
-    input {
-      // CORRECTION IMPORTANTE : Fond transparent pour se fondre dans le conteneur beige
-      background: transparent;
-      padding: 5px; border-radius: 0;
-      &:focus { outline: none; }
-    }
+    input { background: transparent; padding: 5px; border-radius: 0; &:focus { outline: none; } }
 
     .autocomplete-dropdown {
       position: absolute; top: 100%; left: 0; width: 100%;
       background: white; border-radius: 10px; color: #2D0C13;
       box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 50;
       max-height: 200px; overflow-y: auto; margin-top: 5px;
-
       .suggestion-item {
         padding: 10px; cursor: pointer; font-weight: 500;
         &:hover { background: #f0f0f0; color: $color-orange; }
@@ -148,8 +134,9 @@
 
     .drag-handle { cursor: grab; color: rgba(255,255,255,0.5); svg { width: 16px; } }
 
-    .input-title { width: 160px; font-weight: 700; background: #FFF5F0; border-radius: 30px; padding: 10px 20px; }
-    .input-url { flex: 1; background: #FFF5F0; border-radius: 30px; padding: 10px 20px; }
+    // Titre plus large, URL un peu moins pour voir le placeholder
+    .input-title { flex: 2; font-weight: 700; background: #FFF5F0; border-radius: 30px; padding: 10px 20px; }
+    .input-url { flex: 3; background: #FFF5F0; border-radius: 30px; padding: 10px 20px; }
 
     .separator, .link-icon-wrapper { color: white; display: flex; align-items: center; }
 
@@ -160,43 +147,47 @@
   }
 }
 
+// Bouton Nouvelle Option (Centré)
 .add-link-wrapper {
   display: flex; justify-content: center; margin-top: 1.5rem;
 
   .btn-new-option {
     background: none; border: none; color: white;
-    font-size: 1.1rem; font-weight: 700; cursor: pointer;
-    display: flex; align-items: center; gap: 10px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    opacity: 0.9; transition: all 0.2s ease;
 
-    .dashed-circle {
-      width: 32px; height: 32px; border-radius: 50%;
-      border: 2px dashed rgba(255,255,255,0.5);
+    // Le cercle avec le +
+    .icon-circle {
+      width: 24px; height: 24px; border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.6); // Pointillés
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; transition: all 0.2s;
+      transition: all 0.2s ease;
+
+      svg { width: 12px; height: 12px; }
     }
 
+    // Hover Effect: Zoom léger de l'ensemble + éclaircissement
     &:hover {
-      .dashed-circle { border-color: white; background: rgba(255,255,255,0.1); }
+      opacity: 1;
+      transform: scale(1.05); // Zoom léger texte + icone
+
+      .icon-circle {
+        border-color: white;
+        background: rgba(255,255,255,0.1);
+      }
     }
   }
 }
 
 // --- ACTIONS ---
 .form-actions {
-  margin-top: 3rem;
-  display: flex; justify-content: space-between; gap: 1rem;
-
+  margin-top: 3rem; display: flex; justify-content: space-between; gap: 1rem;
   button {
     flex: 1; padding: 14px; border-radius: 30px; border: none;
     font-weight: 800; font-size: 1rem; cursor: pointer;
-    transition: transform 0.2s;
-    &:active { transform: scale(0.98); }
+    transition: transform 0.2s; &:active { transform: scale(0.98); }
   }
-
   .btn-cancel { background: #E8501D; color: white; }
-  .btn-submit {
-    background: #0088CC; color: white;
-    // PLUS D'OPACITÉ RÉDUITE CAR ON NE DISABLE PLUS
-    // &:disabled { opacity: 0.5; }
-  }
+  .btn-submit { background: #0088CC; color: white; }
 }
