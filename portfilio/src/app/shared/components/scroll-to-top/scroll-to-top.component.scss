@@ -1,0 +1,55 @@
+@import '../../../../styles/variables';
+
+.btn-scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999; // Toujours au-dessus du reste (sauf modales)
+
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+
+  background-color: $color-orange; // Orange FIL
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Animation d'apparition/disparition
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  // Quand le bouton est visible (ajouté par le TS)
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  // Effet Hover
+  &:hover {
+    background-color: #2D0C13; // Bordeaux au survol
+    transform: translateY(-3px); // Petit rebond vers le haut
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  // Effet Clic
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // Adaptation Mobile (un peu plus petit et moins collé au bord)
+  @media (max-width: 768px) {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+}
