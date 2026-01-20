@@ -5,7 +5,7 @@ import { SearchBarComponent } from '../../shared/components/search-bar/search-ba
 import { ProjectCardComponent } from '../../shared/components/project-card/project-card.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ProjectService } from '../../core/services/project.service';
-import { Project, ProjectFilters } from '../../core/models/project.model'; // Ajout ProjectFilters
+import { Project, ProjectFilters } from '../../core/models/project.model';
 
 @Component({
   selector: 'app-home',
@@ -24,29 +24,32 @@ export class HomeComponent implements OnInit {
   paginatedProjects: Project[] = [];
   heroImages: Project[] = [];
 
+  // État initial
   currentPage: number = 1;
   itemsPerPage: number = 12;
   totalPages: number = 1;
 
-  // --- ÉTAT GLOBAL DES FILTRES ---
-  // On stocke les choix actuels ici pour pouvoir les combiner
   currentSearchTerm: string = '';
-  currentSortType: string = 'recent'; // Par défaut
+  currentSortType: string = 'recent';
   currentFilters: ProjectFilters = {
-    tags: [],
-    modules: [],
-    promos: [],
+    tags: [], modules: [], promos: [],
     sectionsActive: { tags: true, modules: true, promos: true }
   };
 
   ngOnInit(): void {
+    // 1. Récupération de l'état sauvegardé dans le Service
+    const savedState = this.projectService.getHomeState();
+    this.currentPage = savedState.currentPage;
+    this.currentSearchTerm = savedState.searchQuery;
+    this.currentSortType = savedState.sortType;
+    this.currentFilters = savedState.filters;
+
+    // 2. Chargement des données
     this.projectService.getProjects().subscribe({
       next: (data) => {
         if (data && data.length > 0) {
           this.allProjects = data;
           this.heroImages = data.slice(0, 5);
-
-          // Initialisation : On lance le filtrage global
           this.applyGlobalFilters();
         }
       },
@@ -54,118 +57,100 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // --- ACTIONS (Déclencheurs) ---
+  // --- ACTIONS (Avec Sauvegarde) ---
 
-  // 1. Recherche Texte
   onSearch(term: string): void {
     this.currentSearchTerm = term;
-    this.currentPage = 1; // Reset page
+    this.currentPage = 1; // Reset page sur recherche
+    this.saveState(); // Sauvegarde
     this.applyGlobalFilters();
   }
 
-  // 2. Tri
-  onSort(sortType: string): void { // J'ai changé le type en string pour être souple
+  onSort(sortType: string): void {
     this.currentSortType = sortType;
+    this.saveState(); // Sauvegarde
     this.applyGlobalFilters();
   }
 
-  // 3. NOUVEAU : Filtres avancés
   onFilter(filters: ProjectFilters): void {
     this.currentFilters = filters;
-    this.currentPage = 1; // Reset page
+    this.currentPage = 1; // Reset page sur filtre
+    this.saveState(); // Sauvegarde
     this.applyGlobalFilters();
-  }
-
-
-  // --- LE CERVEAU (Logique combinée) ---
-
-  applyGlobalFilters(): void {
-    // 1. On part toujours de la liste complète
-    let result = [...this.allProjects];
-
-    // 2. FILTRE : Recherche Texte
-    if (this.currentSearchTerm.trim()) {
-      const lowerTerm = this.currentSearchTerm.toLowerCase();
-      result = result.filter(p =>
-        p.title.toLowerCase().includes(lowerTerm)
-      );
-    }
-
-    // 3. FILTRE : Critères Avancés (Tags, Modules, Promos)
-
-    // A. Tags (Si section active ET tags sélectionnés)
-    if (this.currentFilters.sectionsActive.tags && this.currentFilters.tags.length > 0) {
-      result = result.filter(p =>
-        // Le projet doit avoir au moins UN des tags sélectionnés
-        p.tags.some(tag => this.currentFilters.tags.includes(tag))
-      );
-    }
-
-    // B. Modules (Si section active ET modules sélectionnés)
-    if (this.currentFilters.sectionsActive.modules && this.currentFilters.modules.length > 0) {
-      result = result.filter(p =>
-        // p.modules peut être undefined dans le JSON, on sécurise avec || []
-        (p.modules || []).some(mod => this.currentFilters.modules.includes(mod))
-      );
-    }
-
-    // C. Promo (Si section active ET promos sélectionnées)
-    if (this.currentFilters.sectionsActive.promos && this.currentFilters.promos.length > 0) {
-      result = result.filter(p =>
-        this.currentFilters.promos.includes(p.promo)
-      );
-    }
-
-    // 4. TRI
-    switch (this.currentSortType) {
-      case 'recent': // Plus grand ID = Plus récent
-        result.sort((a, b) => b.id - a.id);
-        break;
-      // Note: J'ai adapté les cas pour correspondre aux valeurs renvoyées par la SearchBar précédente
-      case 'default': // Idem recent par défaut
-        result.sort((a, b) => b.id - a.id);
-        break;
-      case 'az': // Alpha A-Z
-        result.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'za': // Alpha Z-A
-        result.sort((a, b) => b.title.localeCompare(a.title));
-        break;
-    }
-
-    // 5. MISE À JOUR FINALE
-    this.filteredProjects = result;
-    this.updatePagination();
-    this.cdr.detectChanges();
-  }
-
-
-  // --- PAGINATION (Inchangé) ---
-  updatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredProjects.length / this.itemsPerPage);
-    if (this.currentPage > this.totalPages) this.currentPage = 1;
-    // Fix: Si 0 résultats, page 1
-    if (this.totalPages === 0) this.currentPage = 1;
-
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-
-    this.paginatedProjects = this.filteredProjects.slice(startIndex, endIndex);
   }
 
   goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.saveState(); // C'est ici que la magie opère pour la pagination !
       this.updatePagination();
       this.scrollToAnchor('projects-anchor');
     }
+  }
+
+  // --- LOGIQUE METIER ---
+
+  private saveState(): void {
+    this.projectService.saveHomeState({
+      currentPage: this.currentPage,
+      searchQuery: this.currentSearchTerm,
+      sortType: this.currentSortType,
+      filters: this.currentFilters
+    });
+  }
+
+  applyGlobalFilters(): void {
+    let result = [...this.allProjects];
+
+    // Recherche
+    if (this.currentSearchTerm.trim()) {
+      const lowerTerm = this.currentSearchTerm.toLowerCase();
+      result = result.filter(p => p.title.toLowerCase().includes(lowerTerm));
+    }
+
+    // Filtres
+    if (this.currentFilters.sectionsActive.tags && this.currentFilters.tags.length > 0) {
+      result = result.filter(p => p.tags.some(tag => this.currentFilters.tags.includes(tag)));
+    }
+    if (this.currentFilters.sectionsActive.modules && this.currentFilters.modules.length > 0) {
+      result = result.filter(p => (p.modules || []).some(mod => this.currentFilters.modules.includes(mod)));
+    }
+    if (this.currentFilters.sectionsActive.promos && this.currentFilters.promos.length > 0) {
+      result = result.filter(p => this.currentFilters.promos.includes(p.promo));
+    }
+
+    // Tri
+    switch (this.currentSortType) {
+      case 'recent': case 'default': result.sort((a, b) => b.id - a.id); break;
+      case 'oldest': result.sort((a, b) => a.id - b.id); break;
+      case 'az': result.sort((a, b) => a.title.localeCompare(b.title)); break;
+      case 'za': result.sort((a, b) => b.title.localeCompare(a.title)); break;
+    }
+
+    this.filteredProjects = result;
+    this.totalPages = Math.ceil(this.filteredProjects.length / this.itemsPerPage);
+
+    // Si la page sauvegardée est trop grande pour le nouveau filtre, on corrige
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = 1;
+      this.saveState();
+    }
+    if (this.totalPages === 0) this.currentPage = 1;
+
+    this.updatePagination();
+    this.cdr.detectChanges();
+  }
+
+  updatePagination(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedProjects = this.filteredProjects.slice(startIndex, endIndex);
   }
 
   get pageNumbers(): number[] {
     return Array(this.totalPages).fill(0).map((x, i) => i + 1);
   }
 
-  // --- UTILITAIRES ---
   scrollToAnchor(id: string): void {
     const element = document.getElementById(id);
     if (element) {
@@ -180,7 +165,5 @@ export class HomeComponent implements OnInit {
     this.projectService.toggleFavorite(id);
   }
 
-  getHeroImageStyle(index: number): string {
-    return `pos-${index}`;
-  }
+  getHeroImageStyle(index: number): string { return `pos-${index}`; }
 }

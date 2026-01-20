@@ -1,10 +1,20 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs'; // Ajout combineLatest
-import { Project } from '../models/project.model';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
+import { Project, ProjectFilters } from '../models/project.model';
 import { ToastService } from './toast.service';
 import { User } from '../models/user.model';
-import { AuthService } from './auth.service'; // Import Auth
+import { AuthService } from './auth.service';
+// On importe le type pour le typage strict
+import { SortOption } from '../../shared/components/search-bar/search-bar.component';
+
+// Interface générique pour sauvegarder l'état d'une page (Home ou Favoris)
+export interface PageState {
+  currentPage: number;
+  searchQuery: string;
+  sortType: SortOption | string; // Accepte les deux pour flexibilité
+  filters: ProjectFilters;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +23,43 @@ export class ProjectService {
 
   private http = inject(HttpClient);
   private toastService = inject(ToastService);
-  private authService = inject(AuthService); // Injection Auth
+  private authService = inject(AuthService);
 
-  // Source de données "brutes" des projets
   private projectsSubject = new BehaviorSubject<Project[]>([]);
+
+  // --- 1. ETAT PAGE HOME ---
+  private homeState: PageState = {
+    currentPage: 1,
+    searchQuery: '',
+    sortType: 'recent',
+    filters: { tags: [], modules: [], promos: [], sectionsActive: { tags: true, modules: true, promos: true } }
+  };
+
+  // --- 2. ETAT PAGE FAVORIS (NOUVEAU) ---
+  private favoritesState: PageState = {
+    currentPage: 1,
+    searchQuery: '',
+    sortType: 'recent',
+    filters: { tags: [], modules: [], promos: [], sectionsActive: { tags: true, modules: true, promos: true } }
+  };
 
   constructor() {
     this.loadProjects();
   }
+
+  // --- GESTION ETAT HOME ---
+  getHomeState(): PageState { return this.homeState; }
+  saveHomeState(state: Partial<PageState>): void { this.homeState = { ...this.homeState, ...state }; }
+  resetHomeState(): void {
+    this.homeState = { currentPage: 1, searchQuery: '', sortType: 'recent', filters: { tags: [], modules: [], promos: [], sectionsActive: { tags: true, modules: true, promos: true } } };
+  }
+
+  // --- GESTION ETAT FAVORIS (NOUVEAU) ---
+  getFavoritesState(): PageState { return this.favoritesState; }
+  saveFavoritesState(state: Partial<PageState>): void { this.favoritesState = { ...this.favoritesState, ...state }; }
+
+
+  // --- LOGIQUE PROJETS (Code existant conservé) ---
 
   private loadProjects(): void {
     const storedProjects = localStorage.getItem('portfilio_projects');
@@ -37,24 +76,16 @@ export class ProjectService {
     }
   }
 
-  /**
-   * HYDRATATION INTELLIGENTE :
-   * Combine les Projets + L'User connecté.
-   * Si l'User change (ou like), cette liste se met à jour automatiquement partout.
-   */
   getProjects(): Observable<Project[]> {
     return combineLatest([
-      this.projectsSubject,        // Flux des projets
-      this.authService.currentUser$ // Flux de l'utilisateur
+      this.projectsSubject,
+      this.authService.currentUser$
     ]).pipe(
       map(([projects, currentUser]) => {
-
-        // Récupérer tous les users pour l'hydratation des avatars auteurs (comme avant)
         const allUsersRaw = localStorage.getItem('portfilio_users');
         const allUsers: User[] = allUsersRaw ? JSON.parse(allUsersRaw) : [];
 
         return projects.map(project => {
-          // 1. Hydratation Auteurs (Avatar & Nom)
           const updatedAuthors = project.authors.map(author => {
             const realUser = allUsers.find(u => Number(u.id) === Number(author.id));
             if (realUser) {
@@ -67,47 +98,33 @@ export class ProjectService {
             return author;
           });
 
-          // 2. Hydratation FAVORIS (C'est ici que ça se joue !)
-          // Le projet est favori SI son ID est dans la liste 'favorites' de l'utilisateur courant
           const isFav = currentUser?.favorites?.includes(project.id) ?? false;
 
           return {
             ...project,
             authors: updatedAuthors,
-            isFavorite: isFav // On écrase la valeur du JSON par la valeur réelle user
+            isFavorite: isFav
           };
         });
       })
     );
   }
 
-  // Action de Like
   toggleFavorite(projectId: number): void {
     const currentUser = this.authService.getCurrentUser();
-
     if (!currentUser) {
       this.toastService.show('Vous devez être connecté pour aimer un projet.', 'error');
       return;
     }
-
-    // 1. On demande à l'AuthService de mettre à jour le User
     this.authService.toggleProjectFavorite(projectId);
-
-    // 2. On affiche le Toast
-    // On vérifie l'état APRES mise à jour pour le message
     const isNowFavorite = this.authService.getCurrentUser()?.favorites?.includes(projectId);
     const msg = isNowFavorite ? 'Projet ajouté aux favoris' : 'Projet retiré des favoris';
     this.toastService.show(msg, 'success');
-
-    // Note : Pas besoin de toucher à projectsSubject ni saveToStorage('portfilio_projects').
-    // Le combineLatest dans getProjects détectera le changement de currentUser
-    // et mettra à jour la vue automatiquement.
   }
 
   deleteProject(id: number): void {
     const currentProjects = this.projectsSubject.value;
     const updatedProjects = currentProjects.filter(p => p.id !== id);
-
     this.projectsSubject.next(updatedProjects);
     this.saveToStorage(updatedProjects);
     this.toastService.show('Projet supprimé avec succès.', 'success');
@@ -117,46 +134,35 @@ export class ProjectService {
     localStorage.setItem('portfilio_projects', JSON.stringify(projects));
   }
 
-  // Récupérer tous les tags uniques existants
   getAllTags(): string[] {
     const projects = this.projectsSubject.value;
     const allTags = projects.flatMap(p => p.tags);
     return [...new Set(allTags)].sort();
   }
 
-  // Récupérer tous les modules uniques
   getAllModules(): string[] {
     const projects = this.projectsSubject.value;
     const allModules = projects.flatMap(p => p.modules || []);
     return [...new Set(allModules)].sort();
   }
 
-  // Créer ou Mettre à jour
   saveProject(project: Project): number {
     const projects = this.projectsSubject.value;
-
-    // CAS 1 : ÉDITION (L'ID existe déjà)
     if (project.id && project.id > 0) {
       const index = projects.findIndex(p => p.id === project.id);
       if (index > -1) {
         projects[index] = project;
         this.projectsSubject.next([...projects]);
         this.saveToStorage(projects);
-        return project.id; // On retourne l'ID existant
+        return project.id;
       }
     }
-
-    // CAS 2 : CRÉATION (Calcul du nouvel ID)
-    // On trouve l'ID max actuel et on ajoute 1
     const maxId = projects.length > 0 ? Math.max(...projects.map(p => p.id)) : 0;
     const newId = maxId + 1;
-
-    project.id = newId; // On assigne le nouvel ID
-
+    project.id = newId;
     const newProjectsList = [...projects, project];
     this.projectsSubject.next(newProjectsList);
     this.saveToStorage(newProjectsList);
-
-    return newId; // On retourne le nouvel ID pour la redirection
+    return newId;
   }
 }

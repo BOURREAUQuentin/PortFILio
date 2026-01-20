@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, HostListener, ElementRef, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, Input, HostListener, ElementRef, inject, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProjectService } from '../../../core/services/project.service';
@@ -13,12 +13,15 @@ export type SortOption = 'default' | 'recent' | 'oldest' | 'az' | 'za';
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss']
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent implements OnInit, OnChanges {
 
   private projectService = inject(ProjectService);
   private eRef = inject(ElementRef);
 
   @Input() searchQuery: string = '';
+  // NOUVEAU : On reçoit l'état initial du parent
+  @Input() initialFilters: ProjectFilters | null = null;
+  @Input() initialSort: string = 'recent';
 
   @Output() searchChange = new EventEmitter<string>();
   @Output() sortChange = new EventEmitter<SortOption>();
@@ -37,11 +40,9 @@ export class SearchBarComponent implements OnInit {
     sectionsActive: { tags: true, modules: true, promos: true }
   };
 
-  // NOUVEAU : État visuel (ouvert/fermé) des sections
-  // Par défaut, on peut les laisser ouvertes ou fermées selon ta préférence
   sectionsExpanded = {
     tags: true,
-    modules: false, // Exemple : fermé par défaut pour gagner de la place
+    modules: false,
     promos: false
   };
 
@@ -58,6 +59,20 @@ export class SearchBarComponent implements OnInit {
         this.availablePromos = [...new Set(allPromos)].sort();
       }
     });
+
+    // Initialisation Label Tri
+    this.updateSortLabel(this.initialSort as SortOption);
+  }
+
+  // NOUVEAU : Réagir quand le parent envoie des données sauvegardées
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialFilters'] && this.initialFilters) {
+      // Copie profonde pour éviter les références
+      this.filters = JSON.parse(JSON.stringify(this.initialFilters));
+    }
+    if (changes['initialSort']) {
+      this.updateSortLabel(this.initialSort as SortOption);
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -73,7 +88,6 @@ export class SearchBarComponent implements OnInit {
 
   // --- ACTIONS ---
 
-  // NOUVEAU : Basculer l'affichage d'une section
   toggleExpansion(section: 'tags' | 'modules' | 'promos'): void {
     this.sectionsExpanded[section] = !this.sectionsExpanded[section];
   }
@@ -115,9 +129,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   toggleSection(section: 'tags' | 'modules' | 'promos', event?: Event): void {
-    // Si l'event vient du switch, on empêche qu'il déclenche aussi le repli (toggleExpansion)
     if (event) event.stopPropagation();
-
     this.filters.sectionsActive[section] = !this.filters.sectionsActive[section];
     this.emitFilters();
   }
@@ -128,7 +140,6 @@ export class SearchBarComponent implements OnInit {
     this.filters.promos = [];
     this.filters.sectionsActive = { tags: true, modules: true, promos: true };
     this.emitFilters();
-    // On peut aussi réouvrir toutes les sections au reset si on veut
     this.sectionsExpanded = { tags: true, modules: true, promos: true };
     this.isFilterMenuOpen = false;
   }
@@ -146,5 +157,17 @@ export class SearchBarComponent implements OnInit {
     this.currentSortLabel = label;
     this.sortChange.emit(type);
     this.isSortMenuOpen = false;
+  }
+
+  private updateSortLabel(type: SortOption): void {
+    const labels: Record<string, string> = {
+      'default': 'Tri par défaut',
+      'recent': 'Plus récents',
+      'oldest': 'Plus anciens',
+      'az': 'Alphabétique (A-Z)',
+      'za': 'Alphabétique (Z-A)'
+    };
+    // Mapping si la valeur stockée ne correspond pas exactement
+    this.currentSortLabel = labels[type] || 'Tri par défaut';
   }
 }
