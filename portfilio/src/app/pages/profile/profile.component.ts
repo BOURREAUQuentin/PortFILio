@@ -10,7 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ProjectService } from '../../core/services/project.service';
 import { User } from '../../core/models/user.model';
 import { Project } from '../../core/models/project.model';
-import {ToastService} from '../../core/services/toast.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -85,7 +85,6 @@ export class ProfileComponent implements OnInit {
     return this.profileUser?.description || "Aucune description renseignée pour le moment.";
   }
 
-  // NOUVEAU : Texte pour le header "Profil de Prénom"
   get headerBackTitle(): string {
     return this.profileUser ? `Profil de ${this.profileUser.firstName}` : 'Retour';
   }
@@ -100,9 +99,14 @@ export class ProfileComponent implements OnInit {
     if (!this.profileUser) return;
 
     this.projectService.getProjects().subscribe(projects => {
-      this.userProjects = projects.filter(p =>
+      // 1. On filtre pour ne garder que les projets de l'utilisateur
+      const filtered = projects.filter(p =>
         p.authors.some(author => Number(author.id) === this.profileUser?.id)
       );
+
+      // 2. AJOUT : On trie par ID décroissant (le plus grand ID = le plus récent)
+      this.userProjects = filtered.sort((a, b) => b.id - a.id);
+
       this.updatePagination();
       this.cdr.detectChanges();
     });
@@ -151,6 +155,7 @@ export class ProfileComponent implements OnInit {
   confirmDelete(): void {
     if (this.projectToDeleteId) {
       this.projectService.deleteProject(this.projectToDeleteId);
+      // On recharge la liste après suppression (le tri s'appliquera aussi)
       this.loadUserProjects();
       this.projectToDeleteId = null;
     }
