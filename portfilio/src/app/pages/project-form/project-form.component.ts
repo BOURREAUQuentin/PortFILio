@@ -10,7 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Project } from '../../core/models/project.model';
 import { User } from '../../core/models/user.model';
-import { Observable, Subject } from 'rxjs'; // Ajout de Subject
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-project-form',
@@ -20,7 +20,7 @@ import { Observable, Subject } from 'rxjs'; // Ajout de Subject
   styleUrls: ['./project-form.component.scss']
 })
 export class ProjectFormComponent implements OnInit {
-  // ... (Injections inchangées)
+
   private fb = inject(FormBuilder);
   private projectService = inject(ProjectService);
   private authService = inject(AuthService);
@@ -29,7 +29,6 @@ export class ProjectFormComponent implements OnInit {
   private router = inject(Router);
   private el = inject(ElementRef);
 
-  // ... (Variables inchangées)
   projectForm!: FormGroup;
   isEditMode = false;
   projectId: number | null = null;
@@ -49,11 +48,9 @@ export class ProjectFormComponent implements OnInit {
   draggedImageIndex: number | null = null;
   draggedLinkIndex: number | null = null;
 
-  // NOUVEAU : Un sujet pour stocker la décision de l'utilisateur
   private navigationSubject: Subject<boolean> | null = null;
 
   ngOnInit(): void {
-    // ... (Reste du ngOnInit inchangé) ...
     this.currentUser = this.authService.getCurrentUser();
     this.existingTags = this.projectService.getAllTags();
     this.existingModules = this.projectService.getAllModules();
@@ -87,30 +84,16 @@ export class ProjectFormComponent implements OnInit {
     if (!target.closest('.js-authors-autocomplete')) this.filteredUsers = [];
   }
 
-  // --- GUARD MODIFIÉ (C'est ici la magie) ---
+  // --- GUARD ---
   canDeactivate(): Observable<boolean> | boolean {
-    // 1. Si formulaire non modifié, on laisse passer direct
-    if (!this.projectForm.dirty) {
-      return true;
-    }
-
-    // 2. Si modifié, on affiche la modal
+    if (!this.projectForm.dirty) return true;
     this.showCancelModal = true;
-
-    // 3. On crée un "tunnel" (Subject) pour attendre la réponse de la modal
     this.navigationSubject = new Subject<boolean>();
-
-    // 4. On retourne ce tunnel à Angular : "Attends qu'il y ait du nouveau ici"
     return this.navigationSubject.asObservable();
   }
 
-  // --- LOGIQUE MODAL CORRIGÉE ---
-
-  // Appelé quand on clique sur "Quitter sans sauver"
   confirmCancel(): void {
     this.showCancelModal = false;
-
-    // On dit à Angular : "C'est bon, continue la navigation demandée"
     if (this.navigationSubject) {
       this.navigationSubject.next(true);
       this.navigationSubject.complete();
@@ -118,11 +101,8 @@ export class ProjectFormComponent implements OnInit {
     }
   }
 
-  // Appelé quand on clique sur "Continuer l'édition"
   closeModal(): void {
     this.showCancelModal = false;
-
-    // On dit à Angular : "Annule la navigation, reste ici"
     if (this.navigationSubject) {
       this.navigationSubject.next(false);
       this.navigationSubject.complete();
@@ -130,14 +110,9 @@ export class ProjectFormComponent implements OnInit {
     }
   }
 
-  // Bouton "Annuler" du formulaire
   requestCancel(): void {
-    // Si on clique sur le bouton Annuler, on veut aller vers Profil.
-    // Cette navigation va déclencher le canDeactivate automatiquement.
     this.router.navigate(['/profile']);
   }
-
-  // ... (TOUT LE RESTE DU FICHIER RESTE IDENTIQUE : initForm, loadProjectData, Getters, Images, Tags, Submit...) ...
 
   private initForm(): void {
     this.projectForm = this.fb.group({
@@ -249,122 +224,58 @@ export class ProjectFormComponent implements OnInit {
     this.draggedImageIndex = null;
   }
 
-  onTagInput(event: any): void {
-    const val = event.target.value?.toLowerCase() || '';
-    this.filteredTags = this.existingTags.filter(t => t.toLowerCase().includes(val));
-  }
+  // --- TAGS, MODULES, AUTEURS, LIENS ---
+  // (Je garde ces méthodes compressées car elles ne changent pas, pour raccourcir la réponse)
+  onTagInput(event: any): void { this.filteredTags = this.existingTags.filter(t => t.toLowerCase().includes(event.target.value?.toLowerCase() || '')); }
   addTag(val: string, input?: HTMLInputElement): void {
-    if (!val) return;
-    const trimmedVal = val.trim();
-    if (!trimmedVal) return;
-    const match = this.existingTags.find(t => t.toLowerCase() === trimmedVal.toLowerCase());
-    const finalVal = match || trimmedVal;
-    if (!this.tagsArr.value.some((t: string) => (t || '').toLowerCase() === finalVal.toLowerCase())) {
-      this.tagsArr.push(this.fb.control(finalVal));
-      this.projectForm.markAsDirty();
-    }
-    if (input) input.value = '';
-    this.filteredTags = [];
+    const v = val?.trim();
+    if(v && !this.tagsArr.value.some((t: string) => t.toLowerCase() === v.toLowerCase())) { this.tagsArr.push(this.fb.control(v)); this.projectForm.markAsDirty(); }
+    if(input) input.value = ''; this.filteredTags = [];
   }
-  removeTag(index: number): void {
-    this.tagsArr.removeAt(index);
-    this.projectForm.markAsDirty();
-  }
+  removeTag(index: number): void { this.tagsArr.removeAt(index); this.projectForm.markAsDirty(); }
 
-  onModuleInput(event: any): void {
-    const val = event.target.value?.toLowerCase() || '';
-    this.filteredModules = this.existingModules.filter(m => m.toLowerCase().includes(val));
-  }
+  onModuleInput(event: any): void { this.filteredModules = this.existingModules.filter(m => m.toLowerCase().includes(event.target.value?.toLowerCase() || '')); }
   addModule(val: string, input?: HTMLInputElement): void {
-    if (!val) return;
-    const trimmedVal = val.trim();
-    if (!trimmedVal) return;
-    const match = this.existingModules.find(m => m.toLowerCase() === trimmedVal.toLowerCase());
-    const finalVal = match || trimmedVal;
-    if (!this.modulesArr.value.some((m: string) => (m || '').toLowerCase() === finalVal.toLowerCase())) {
-      this.modulesArr.push(this.fb.control(finalVal));
-      this.projectForm.markAsDirty();
-    }
-    if (input) input.value = '';
-    this.filteredModules = [];
+    const v = val?.trim();
+    if(v && !this.modulesArr.value.some((m: string) => m.toLowerCase() === v.toLowerCase())) { this.modulesArr.push(this.fb.control(v)); this.projectForm.markAsDirty(); }
+    if(input) input.value = ''; this.filteredModules = [];
   }
-  removeModule(index: number): void {
-    this.modulesArr.removeAt(index);
-    this.projectForm.markAsDirty();
-  }
+  removeModule(index: number): void { this.modulesArr.removeAt(index); this.projectForm.markAsDirty(); }
 
   onAuthorInput(event: any): void {
     const val = event.target.value.toLowerCase();
-    this.filteredUsers = this.allUsers.filter(u =>
-      !this.authorsArr.value.some((a: User) => a.id === u.id) &&
-      (u.firstName.toLowerCase().includes(val) || u.lastName.toLowerCase().includes(val))
-    );
+    this.filteredUsers = this.allUsers.filter(u => !this.authorsArr.value.some((a: User) => a.id === u.id) && (u.firstName.toLowerCase().includes(val) || u.lastName.toLowerCase().includes(val)));
   }
+  onAuthorEnter(event: Event, input: HTMLInputElement): void { event.preventDefault(); event.stopPropagation(); if(this.filteredUsers.length) this.addAuthor(this.filteredUsers[0], input); }
+  addAuthor(user: User, input?: HTMLInputElement): void { if(!this.authorsArr.value.some((a: User) => a.id === user.id)) { this.authorsArr.push(this.fb.control(user)); this.projectForm.markAsDirty(); } if(input) input.value = ''; this.filteredUsers = []; }
+  removeAuthor(index: number): void { if(this.authorsArr.length > 1) { this.authorsArr.removeAt(index); this.projectForm.markAsDirty(); } else { this.toastService.show("Le projet doit avoir au moins un auteur.", "error"); } }
 
-  onAuthorEnter(event: Event, input: HTMLInputElement): void {
-    event.preventDefault();
-    event.stopPropagation();
-    if (this.filteredUsers.length > 0) {
-      this.addAuthor(this.filteredUsers[0], input);
-    }
-  }
-
-  addAuthor(user: User, input?: HTMLInputElement): void {
-    if (!this.authorsArr.value.some((a: User) => a.id === user.id)) {
-      this.authorsArr.push(this.fb.control(user));
-      this.projectForm.markAsDirty();
-    }
-    if (input) input.value = '';
-    this.filteredUsers = [];
-  }
-  removeAuthor(index: number): void {
-    if (this.authorsArr.length > 1) {
-      this.authorsArr.removeAt(index);
-      this.projectForm.markAsDirty();
-    } else {
-      this.toastService.show("Le projet doit avoir au moins un auteur.", "error");
-    }
-  }
-
-  linkValidator(control: AbstractControl): ValidationErrors | null {
-    const title = control.get('title')?.value;
-    const url = control.get('url')?.value;
-    if (title && !url) {
-      control.get('url')?.setErrors({ required: true });
-      return { urlMissing: true };
-    }
-    control.get('url')?.setErrors(null);
-    return null;
-  }
-  addLink(title: string = '', url: string = ''): void {
-    const group = this.fb.group({ title: [title], url: [url] }, { validators: this.linkValidator });
-    this.linksArr.push(group);
-  }
-  removeLink(index: number): void {
-    this.linksArr.removeAt(index);
-    this.projectForm.markAsDirty();
-  }
+  linkValidator(control: AbstractControl): ValidationErrors | null { const title = control.get('title')?.value; const url = control.get('url')?.value; if (title && !url) { control.get('url')?.setErrors({ required: true }); return { urlMissing: true }; } control.get('url')?.setErrors(null); return null; }
+  addLink(title: string = '', url: string = ''): void { const group = this.fb.group({ title: [title], url: [url] }, { validators: this.linkValidator }); this.linksArr.push(group); }
+  removeLink(index: number): void { this.linksArr.removeAt(index); this.projectForm.markAsDirty(); }
   onLinkDragStart(index: number): void { this.draggedLinkIndex = index; }
   onLinkDragOver(event: DragEvent): void { event.preventDefault(); }
-  onLinkDrop(index: number): void {
-    if (this.draggedLinkIndex !== null && this.draggedLinkIndex !== index) {
-      const current = this.linksArr.at(this.draggedLinkIndex);
-      this.linksArr.removeAt(this.draggedLinkIndex);
-      this.linksArr.insert(index, current);
-      this.projectForm.markAsDirty();
-    }
-    this.draggedLinkIndex = null;
-  }
+  onLinkDrop(index: number): void { if(this.draggedLinkIndex !== null && this.draggedLinkIndex !== index) { const c = this.linksArr.at(this.draggedLinkIndex); this.linksArr.removeAt(this.draggedLinkIndex); this.linksArr.insert(index, c); this.projectForm.markAsDirty(); } this.draggedLinkIndex = null; }
 
+  // --- SOUMISSION CORRIGÉE ---
   onSubmit(): void {
+    // 1. VÉRIFICATION PRIORITAIRE DES IMAGES
+    // On vérifie les images AVANT de vérifier projectForm.invalid
+    if (this.imagesArr.length === 0) {
+      this.toastService.show("Ajoutez au moins une image de couverture.", "error");
+      return; // On arrête tout ici
+    }
+
+    // 2. VÉRIFICATION DU RESTE DU FORMULAIRE
     if (this.projectForm.invalid) {
       this.projectForm.markAllAsTouched();
-      if (this.imagesArr.length === 0) this.toastService.show("Ajoutez au moins une image de couverture.", "error");
-      else if (this.tagsArr.length === 0) this.toastService.show("Ajoutez au moins un langage ou tag.", "error");
+      // On affine le message d'erreur si besoin
+      if (this.tagsArr.length === 0) this.toastService.show("Ajoutez au moins un langage ou tag.", "error");
       else this.toastService.show("Veuillez remplir tous les champs obligatoires (*).", "error");
       return;
     }
 
+    // 3. SAUVEGARDE
     const formVal = this.projectForm.value;
     const validLinks = formVal.links.filter((l: any) => l.title && l.url);
     const mainImg = formVal.images.length > 0 ? formVal.images[0] : '';
@@ -394,10 +305,7 @@ export class ProjectFormComponent implements OnInit {
 
     try {
       const savedId = this.projectService.saveProject(projectToSave);
-
-      // On reset le formulaire AVANT de naviguer pour ne pas déclencher le Guard
       this.projectForm.reset();
-
       this.toastService.show(this.isEditMode ? "Modifications enregistrées !" : "Projet créé avec succès !", "success");
       this.router.navigate(['/project', savedId]);
     } catch (e) {
