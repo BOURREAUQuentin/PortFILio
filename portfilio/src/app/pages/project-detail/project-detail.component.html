@@ -18,17 +18,22 @@
 
     <div class="lightbox-content" (click)="$event.stopPropagation()">
 
-      <button class="nav-btn prev" (click)="prevImage($event)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
+      @if (allImages.length > 1) {
+        <button class="nav-btn prev" (click)="prevImage($event)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+      }
 
       <img [src]="allImages[currentLightboxIndex]" class="lightbox-img" alt="Zoom">
 
-      <button class="nav-btn next" (click)="nextImage($event)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
+      @if (allImages.length > 1) {
+        <button class="nav-btn next" (click)="nextImage($event)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
 
-      <div class="counter">{{ currentLightboxIndex + 1 }} / {{ allImages.length }}</div>
+        <div class="counter">{{ currentLightboxIndex + 1 }} / {{ allImages.length }}</div>
+      }
+
     </div>
   </div>
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, HostListener } from '@angular/core'; // HostListener ajouté
+import { Component, OnInit, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../shared/components/header/header.component';
@@ -111,6 +111,9 @@ export class ProjectDetailComponent implements OnInit {
 
   nextImage(event?: Event): void {
     event?.stopPropagation();
+    // Sécurité : ne rien faire s'il n'y a qu'une image
+    if (this.allImages.length <= 1) return;
+
     if (this.currentLightboxIndex < this.allImages.length - 1) {
       this.currentLightboxIndex++;
     } else {
@@ -120,6 +123,9 @@ export class ProjectDetailComponent implements OnInit {
 
   prevImage(event?: Event): void {
     event?.stopPropagation();
+    // Sécurité : ne rien faire s'il n'y a qu'une image
+    if (this.allImages.length <= 1) return;
+
     if (this.currentLightboxIndex > 0) {
       this.currentLightboxIndex--;
     } else {
@@ -133,7 +139,11 @@ export class ProjectDetailComponent implements OnInit {
     if (!this.isLightboxOpen) return;
 
     if (event.key === 'Escape') this.closeLightbox();
-    if (event.key === 'ArrowRight') this.nextImage();
-    if (event.key === 'ArrowLeft') this.prevImage();
+
+    // On ne permet la navigation clavier que s'il y a plusieurs images
+    if (this.allImages.length > 1) {
+      if (event.key === 'ArrowRight') this.nextImage();
+      if (event.key === 'ArrowLeft') this.prevImage();
+    }
   }
 }
