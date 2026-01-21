@@ -80,6 +80,10 @@ Le projet suit une architecture modulaire stricte :
    
 Accédez à l'application via *http://localhost:4200*.
 
+Si vous voulez tester de vous connecter sans créer de compte, utilisez les identifiants suivants :
+- **Email :** `demo`
+- **Mot de passe :** `demo`
+
 ---
 
 ## 🌐 Partage sur Réseau Local

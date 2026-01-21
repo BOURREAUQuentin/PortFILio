@@ -44,5 +44,15 @@
   { "id": 18, "firstName": "Sound", "lastName": "Guy", "promo": "A2", "title": "Ingénieur Son", "avatarUrl": "https://i.pravatar.cc/150?u=18" },
   { "id": 19, "firstName": "Grand", "lastName": "Master", "promo": "A3", "title": "Game Dev", "avatarUrl": "https://i.pravatar.cc/150?u=19" },
   { "id": 20, "firstName": "Novice", "lastName": "Dev", "promo": "A3", "title": "Junior Dev", "avatarUrl": "https://i.pravatar.cc/150?u=20" },
-  { "id": 21, "firstName": "Satoshi", "lastName": "N.", "promo": "A3", "title": "Blockchain Expert", "avatarUrl": "https://i.pravatar.cc/150?u=21" }
+  { "id": 21, "firstName": "Satoshi", "lastName": "N.", "promo": "A3", "title": "Blockchain Expert", "avatarUrl": "https://i.pravatar.cc/150?u=21" },
+  {
+    "id": 22,
+    "email": "demo",
+    "password": "demo",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "promo": "A1",
+    "title": "Je suis un utilisateur de démonstration",
+    "description": "Je suis un utilisateur de démonstration"
+  }
 ]
